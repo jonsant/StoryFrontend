@@ -1,0 +1,19 @@
+<mat-toolbar>
+    <a [routerLink]="['/signup']">
+        <button mat-button aria-label="Home" >
+            My App
+        </button>
+    </a>
+    <span class="example-spacer"></span>
+    @if (isLoggedIn) {
+        <button mat-button aria-label="Logout" (click)="Logout()">
+            <span>Logga ut</span>
+            <mat-icon>logout</mat-icon>
+        </button>
+    }
+    @else {
+        <button mat-button aria-label="Logout" (click)="Login()">
+            <span>Logga in</span>
+            <mat-icon>login</mat-icon>
+        </button>
+    }

@@ -1,21 +1,22 @@
 import { Component, inject } from '@angular/core';
 import { StoryService } from '../services/StoryService';
 import { Forecast } from '../models/Forecast';
-import { catchError, lastValueFrom, of } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    JsonPipe
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-home',
+    standalone: true,
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss',
+    imports: [
+        JsonPipe
+    ]
 })
 export class HomeComponent {
   storyService = inject(StoryService);
   forecasts?: Forecast[];
+  // name = JSON.parse(sessionStorage.getItem("user")!).name;
 
   async ngOnInit() {
     this.forecasts = await lastValueFrom(this.storyService.GetForecasts());
