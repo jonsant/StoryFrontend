@@ -7,6 +7,7 @@ export const environment = {
             authority: 'https://login.microsoftonline.com/common'
         }
     },
+    redirectUri: 'http://localhost:4200',
     apiConfig: {
         scopes: ['user.read'],
         uri: 'https://graph.microsoft.com/v1.0/me'
