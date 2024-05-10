@@ -1,11 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { StoryAuthService } from '../services/StoryAuthService';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [],
+  imports: [
+    MatIconModule,
+    CommonModule,
+    MatButtonModule,
+    RouterModule
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })

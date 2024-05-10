@@ -5,13 +5,13 @@ import { lastValueFrom } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.scss',
-    imports: [
-        JsonPipe
-    ]
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
+  imports: [
+    JsonPipe
+  ]
 })
 export class HomeComponent {
   storyService = inject(StoryService);
