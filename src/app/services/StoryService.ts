@@ -4,11 +4,10 @@ import { Forecast } from "../models/Forecast";
 import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class StoryService {
     baseUrl: string = environment.baseUrl;
     constructor(private httpClient: HttpClient) {
-        console.log(environment.production);
     }
 
     GetForecasts(): Observable<Forecast[]> {

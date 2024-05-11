@@ -1,13 +1,13 @@
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon'; 
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Component, Inject } from '@angular/core';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, PopupRequest, RedirectRequest } from '@azure/msal-browser';
-import { Observable, Subject, Subscription, filter, takeUntil } from 'rxjs';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { Subject, Subscription, filter, takeUntil } from 'rxjs';
 import { StoryAuthService } from '../services/StoryAuthService';
+import { ProfileType } from '../models/ProfileType';
 
 @Component({
   selector: 'app-navbar',
@@ -27,6 +27,8 @@ export class NavbarComponent {
   private readonly _destroying$ = new Subject<void>();
   isLoggedIn: boolean = false;
   loggedIn$ = new Subscription();
+  profile?: ProfileType;
+  profile$ = new Subscription();;
 
   constructor(
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
@@ -37,9 +39,16 @@ export class NavbarComponent {
   ) {
   }
 
-  ngOnInit() {
-    this.isLoggedIn = this.storyAuthService.IsLoggedIn();
-    this.loggedIn$ = this.storyAuthService.GetLoggedInStatus().subscribe(l => this.isLoggedIn = l);
+  async ngOnInit() {
+    this.loggedIn$ = this.storyAuthService.GetLoggedInStatus().subscribe(l => {
+      this.isLoggedIn = l;
+      console.log("isLoggedIn ", this.isLoggedIn);
+    });
+
+    this.profile$ = this.storyAuthService.GetUserProfile().subscribe(p => {
+      this.profile = p;
+      console.log("profile ", this.profile);
+    });
 
     this.authService.handleRedirectObservable().subscribe();
 
@@ -58,7 +67,20 @@ export class NavbarComponent {
           this.setLoginDisplay();
         }
       });
-    
+
+    this.msalBroadcastService.msalSubject$
+      .pipe(
+        filter(
+          (msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS
+        ),
+        takeUntil(this._destroying$)
+      )
+      .subscribe((result: EventMessage) => {
+        const payload = result.payload as AuthenticationResult;
+        this.authService.instance.setActiveAccount(payload.account);
+        this.storyAuthService.checkLoggedIn();
+      });
+
     this.msalBroadcastService.inProgress$
       .pipe(
         filter((status: InteractionStatus) => status === InteractionStatus.None),
@@ -70,15 +92,11 @@ export class NavbarComponent {
       })
   }
 
-  Login() {
-    this.router.navigate(['/login']);
-  }
-
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
 
-  checkAndSetActiveAccount(){
+  checkAndSetActiveAccount() {
     /**
      * If no active account set but there are accounts signed in, sets first account to active account
      * To use active account set here, subscribe to inProgress$ first in your component
@@ -89,30 +107,33 @@ export class NavbarComponent {
     if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
       let accounts = this.authService.instance.getAllAccounts();
       this.authService.instance.setActiveAccount(accounts[0]);
-      this.storyAuthService.SetLoggedInStatus(true);
     }
   }
 
   loginRedirect() {
-    if (this.msalGuardConfig.authRequest){
-      this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
+    if (this.msalGuardConfig.authRequest) {
+      this.authService.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
     } else {
       this.authService.loginRedirect();
     }
   }
 
   loginPopup() {
-    if (this.msalGuardConfig.authRequest){
-      this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
+    if (this.msalGuardConfig.authRequest) {
+      this.authService.loginPopup({ ...this.msalGuardConfig.authRequest } as PopupRequest)
         .subscribe((response: AuthenticationResult) => {
           this.authService.instance.setActiveAccount(response.account);
         });
-      } else {
-        this.authService.loginPopup()
-          .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
-      });
+    } else {
+      this.authService.loginPopup()
+        .subscribe((response: AuthenticationResult) => {
+          this.authService.instance.setActiveAccount(response.account);
+        });
     }
+  }
+
+  Login() {
+    this.router.navigate(['/login']);
   }
 
   Logout(popup?: boolean) {
@@ -129,5 +150,6 @@ export class NavbarComponent {
     this._destroying$.next(undefined);
     this._destroying$.complete();
     if (this.loggedIn$) this.loggedIn$.unsubscribe();
+    if (this.profile$) this.profile$.unsubscribe();
   }
 }

@@ -1,15 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
 import { StoryAuthService } from '../services/StoryAuthService';
-
-type ProfileType = {
-  givenName?: string,
-  surname?: string,
-  userPrincipalName?: string,
-  id?: string
-};
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,21 +12,13 @@ type ProfileType = {
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  profile: ProfileType | undefined;
   storyAuthService = inject(StoryAuthService);
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     // this.getProfile(environment.apiConfig.uri);
-    if (this.storyAuthService.IsLoggedIn()) this.router.navigate(['home']);
-  }
-
-  getProfile(url: string) {
-    this.http.get(url)
-      .subscribe(profile => {
-        this.profile = profile;
-      });
+    if (await lastValueFrom(this.storyAuthService.GetLoggedInStatus())) this.router.navigate(['home']);
   }
 
   // private decodeToken(token: string) {

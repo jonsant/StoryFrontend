@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -20,11 +21,15 @@ import { MatButtonModule } from '@angular/material/button';
 export class SignupComponent {
   authService = inject(StoryAuthService)
   router = inject(Router);
+  loggedIn$ = new Subscription();
 
-  ngOnInit() {
-    if (this.authService.IsLoggedIn()) {
-      this.router.navigate(['home']);
-    }
-    console.log(this.authService.IsLoggedIn());
+  async ngOnInit() {
+    this.loggedIn$ = this.authService.GetLoggedInStatus().subscribe(s => {
+      if (s) this.router.navigate(['home']);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.loggedIn$) this.loggedIn$.unsubscribe();
   }
 }

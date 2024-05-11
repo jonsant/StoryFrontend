@@ -6,6 +6,7 @@
     </a>
     <span class="example-spacer"></span>
     @if (isLoggedIn) {
+            <span>{{profile?.givenName}}</span>
         <button mat-button aria-label="Logout" (click)="Logout()">
             <span>Logga ut</span>
             <mat-icon>logout</mat-icon>
