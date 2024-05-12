@@ -17,18 +17,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Echo testvar
-        run: echo "Testvar is ${{ secrets.TESTVAR }}"
-
-      - name: Build environment file
-        working-directory: ./
-        run: npm install && npm run prebuild:prod
-        env:
-          TESTVAR: ${{ secrets.TESTVAR }}
-          MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
-          MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
-          STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
-
       - name: Build Angular app to prod
         working-directory: ./
         run: npm install && npm run build:prod
