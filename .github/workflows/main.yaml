@@ -32,7 +32,7 @@ jobs:
           branch: prod  
           token: ${{ secrets.GH_TOKEN }}
         env:
-          testvar: ${{ secrets.testvar }}
-          msalClientId: ${{ secrets.msalClientId }}
-          msalAuthority: ${{ secrets.msalAuthority }}
-          storyApiScopes: ${{ secrets.storyApiScopes }}
+          TESTVAR: ${{ secrets.TESTVAR }}
+          MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
+          MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
+          STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
