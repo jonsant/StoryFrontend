@@ -25,6 +25,11 @@ jobs:
           MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
           MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
           STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
+        with:
+          TESTVAR: ${{ secrets.TESTVAR }}
+          MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
+          MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
+          STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
 
       - name: Build Angular app to prod
         working-directory: ./
