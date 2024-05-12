@@ -23,12 +23,13 @@ const setEnv = () => {
     testvar: '${process.env.testvar}'
   };
   `;
-    console.log('The file `environment.ts` will be written with the following content: \n');
+    console.log('The file `environment.ts` will be written with the following content:\n');
     writeFile(targetPath, envConfigFile, (err: any) => {
         if (err) {
             console.error(err);
             throw err;
         } else {
+            console.log(envConfigFile);
             console.log(`Angular environment.ts file generated correctly at ${targetPath} \n`);
         }
     });
