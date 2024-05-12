@@ -2,17 +2,18 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NavbarComponent } from './navbar/navbar.component';
+import { environment } from '../environments/environment';
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss',
-    imports: [
-        RouterOutlet,
-        MatSlideToggleModule,
-        NavbarComponent
-    ]
+  selector: 'app-root',
+  standalone: true,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
+  imports: [
+    RouterOutlet,
+    MatSlideToggleModule,
+    NavbarComponent
+  ]
 })
 export class AppComponent {
   title = 'StoryFrontend';
@@ -22,6 +23,7 @@ export class AppComponent {
   // private readonly _destroying$ = new Subject<void>();
 
   ngOnInit(): void {
+    console.log(environment.testvar);
     // this.authService.handleRedirectObservable().subscribe();
 
     // this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
@@ -39,7 +41,7 @@ export class AppComponent {
     //       this.setLoginDisplay();
     //     }
     //   });
-    
+
     // this.msalBroadcastService.inProgress$
     //   .pipe(
     //     filter((status: InteractionStatus) => status === InteractionStatus.None),

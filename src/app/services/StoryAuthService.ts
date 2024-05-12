@@ -58,7 +58,7 @@ export class StoryAuthService {
         const fromStorage = sessionStorage.getItem("user");
         let output: ProfileType;
         if (fromStorage === null) {
-            let profile = await lastValueFrom(this.httpClient.get(environment.apiConfig.uri)) as ProfileType;
+            let profile = await lastValueFrom(this.httpClient.get(environment.msalApiUrl)) as ProfileType;
             sessionStorage.setItem("user", JSON.stringify(profile));
             output = profile;
         }

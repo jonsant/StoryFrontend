@@ -45,8 +45,8 @@ export const appConfig: ApplicationConfig = {
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
-      clientId: environment.msalConfig.auth.clientId,
-      authority: environment.msalConfig.auth.authority,
+      clientId: environment.msalClientId,
+      authority: environment.msalAuthority,
       redirectUri: environment.redirectUri,
       postLogoutRedirectUri: '/signup'
     },
@@ -66,8 +66,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
-  protectedResourceMap.set(environment.apiConfig.uri, environment.apiConfig.scopes);
-  protectedResourceMap.set(environment.storyApiConfig.uri, environment.storyApiConfig.scopes);
+  protectedResourceMap.set(environment.msalApiUrl, environment.msalApiScopes);
+  protectedResourceMap.set(environment.storyApiUri, environment.storyApiScopes);
 
   return {
     interactionType: InteractionType.Popup,
@@ -79,7 +79,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Popup,
     authRequest: {
-      scopes: [...environment.apiConfig.scopes]
+      scopes: [...environment.msalApiScopes]
     },
     loginFailedRoute: '/login-failed'
   };

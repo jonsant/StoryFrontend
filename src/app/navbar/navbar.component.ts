@@ -98,8 +98,6 @@ export class NavbarComponent {
       )
       .subscribe((result: EventMessage) => {
         // Do something with event payload here
-        console.log(result)
-        debugger
       });
   }
 

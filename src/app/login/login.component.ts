@@ -17,7 +17,7 @@ export class LoginComponent {
   constructor(private http: HttpClient, private router: Router) { }
 
   async ngOnInit() {
-    // this.getProfile(environment.apiConfig.uri);
+    // this.getProfile(environment.msalApiUrl);
     if (await lastValueFrom(this.storyAuthService.GetLoggedInStatus())) this.router.navigate(['home']);
   }
 
