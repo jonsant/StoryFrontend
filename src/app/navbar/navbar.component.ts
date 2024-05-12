@@ -90,6 +90,17 @@ export class NavbarComponent {
         this.setLoginDisplay();
         this.checkAndSetActiveAccount();
       })
+
+    this.msalBroadcastService.msalSubject$
+      .pipe(
+        filter((msg: EventMessage) => msg.eventType === EventType.ACQUIRE_TOKEN_SUCCESS),
+        takeUntil(this._destroying$)
+      )
+      .subscribe((result: EventMessage) => {
+        // Do something with event payload here
+        console.log(result)
+        debugger
+      });
   }
 
   setLoginDisplay() {

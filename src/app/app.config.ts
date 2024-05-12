@@ -31,14 +31,14 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MSAL_GUARD_CONFIG,
       useFactory: MSALGuardConfigFactory
-  },
-  {
+    },
+    {
       provide: MSAL_INTERCEPTOR_CONFIG,
       useFactory: MSALInterceptorConfigFactory
-  },
-  MsalService,
-  MsalGuard,
-  MsalBroadcastService, provideAnimationsAsync()
+    },
+    MsalService,
+    MsalGuard,
+    MsalBroadcastService, provideAnimationsAsync()
   ]
 };
 
@@ -67,15 +67,16 @@ export function MSALInstanceFactory(): IPublicClientApplication {
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
   protectedResourceMap.set(environment.apiConfig.uri, environment.apiConfig.scopes);
+  protectedResourceMap.set(environment.storyApiConfig.uri, environment.storyApiConfig.scopes);
 
   return {
     interactionType: InteractionType.Popup,
-    protectedResourceMap
+    protectedResourceMap: protectedResourceMap,
   };
 }
 
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
-  return { 
+  return {
     interactionType: InteractionType.Popup,
     authRequest: {
       scopes: [...environment.apiConfig.scopes]
@@ -84,9 +85,9 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   };
 }
 
-const initialNavigation = !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup() 
-    ? withEnabledBlockingInitialNavigation() // Set to enabledBlocking to use Angular Universal
-    : withDisabledInitialNavigation(); 
+const initialNavigation = !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup()
+  ? withEnabledBlockingInitialNavigation() // Set to enabledBlocking to use Angular Universal
+  : withDisabledInitialNavigation();
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
