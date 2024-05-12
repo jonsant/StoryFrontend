@@ -18,7 +18,7 @@ jobs:
           node-version: 20
 
       - name: Echo testvar
-      run: echo "Testvar is ${{ secrets.TESTVAR }}"
+        run: echo "Testvar is ${{ secrets.TESTVAR }}"
 
       - name: Build environment file
         working-directory: ./
