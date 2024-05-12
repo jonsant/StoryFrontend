@@ -37,4 +37,4 @@ jobs:
           MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
           STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
         run: |
-        echo ${#TESTVAR}
+        echo ${{ secrets.TESTVAR }}
