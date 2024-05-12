@@ -12,15 +12,15 @@ const setEnv = () => {
     const envConfigFile = `export const environment = {
     msalApiUrl: 'https://graph.microsoft.com/v1.0/me',
     msalApiScopes: ['user.read'],
-    msalClientId: '${process.env.msalClientId}',
-    msalAuthority: '${process.env.msalAuthority}',
-    storyApiScopes: ${process.env.storyApiScopes},
+    msalClientId: '${process.env.MSALCLIENTID}',
+    msalAuthority: '${process.env.MSALAUTHORITY}',
+    storyApiScopes: ${process.env.STORYAPISCOPES},
     appVersion: '${appVersion}',
     production: true,
     baseUrl: 'https://storybackend.azurewebsites.net/',
     storyApiUri: 'https://storybackend.azurewebsites.net/',
     redirectUri: 'https://jonsant.github.io/StoryFrontend/',
-    testvar: '${process.env.testvar}'
+    testvar: '${process.env.TESTVAR}'
   };
   `;
     console.log('The file `environment.ts` will be written with the following content:\n');
