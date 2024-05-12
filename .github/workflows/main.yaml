@@ -36,3 +36,4 @@ jobs:
           MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
           MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
           STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
+        run: | echo ${#TESTVAR}
