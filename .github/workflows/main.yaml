@@ -31,9 +31,12 @@ jobs:
           folder: dist/browser
           branch: prod  
           token: ${{ secrets.GH_TOKEN }}
+          TESTVAR: ${{ secrets.TESTVAR }}
+          MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
+          MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
+          STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
         env:
           TESTVAR: ${{ secrets.TESTVAR }}
           MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
           MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
           STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
-        run: echo ${#secrets.TESTVAR}
