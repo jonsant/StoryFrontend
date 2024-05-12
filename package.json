@@ -6,6 +6,7 @@
     "start": "ng serve",
     "prebuild": "ts-node src/environments/set-env.ts",
     "build": "ng build",
+    "prebuild:prod": "ts-node src/environments/set-env.ts",
     "build:prod": "ng build --configuration=production --base-href=/StoryFrontend/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
