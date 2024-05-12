@@ -31,3 +31,8 @@ jobs:
           folder: dist/browser
           branch: prod  
           token: ${{ secrets.GH_TOKEN }}
+        env:
+          testvar: ${{ secrets.testvar }}
+          msalClientId: ${{ secrets.msalClientId }}
+          msalAuthority: ${{ secrets.msalAuthority }}
+          storyApiScopes: ${{ secrets.storyApiScopes }}
