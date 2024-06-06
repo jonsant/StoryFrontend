@@ -43,6 +43,7 @@ export class StoryAuthService {
     SetLoggedInStatus(value: boolean) {
         this.loggedIn = value;
         this.loggedIn$.next(this.loggedIn);
+        console.log("set logged in: ", value);
     }
 
     GetUserProfile() {

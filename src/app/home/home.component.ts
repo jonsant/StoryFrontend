@@ -3,6 +3,9 @@ import { StoryService } from '../services/StoryService';
 import { Forecast } from '../models/Forecast';
 import { lastValueFrom } from 'rxjs';
 import { JsonPipe } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { Story } from '../models/Story';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,16 +13,22 @@ import { JsonPipe } from '@angular/common';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   imports: [
-    JsonPipe
+    JsonPipe,
+    MatTableModule
   ]
 })
 export class HomeComponent {
   storyService = inject(StoryService);
+  router = inject(Router);
   forecasts?: Forecast[];
+  stories?: Story[];
+  displayedColumns: string[] = ['storyName'];
+  filteredStories: Story[] = [];
   // name = JSON.parse(sessionStorage.getItem("user")!).name;
 
   async ngOnInit() {
-    this.forecasts = await lastValueFrom(this.storyService.GetForecasts());
+    // this.forecasts = await lastValueFrom(this.storyService.GetForecasts());
+    await this.GetStories();
   }
 
   async CreateForecast() {
@@ -30,5 +39,17 @@ export class HomeComponent {
     forecast.WeatherForecastId = "potatis";
     let response = await lastValueFrom(this.storyService.CreateForecast(forecast));
     this.forecasts?.push(response);
+  }
+
+  async GetStories() {
+    this.stories = await lastValueFrom(this.storyService.GetStoriesByUserId());
+    this.filteredStories = this.stories;
+  }
+
+  async StoryClicked(row: any) {
+    let story = row as Story;
+    if (!story.storyId) return;
+    sessionStorage.setItem("currentStoryId", story.storyId);
+    this.router.navigate(['story']);
   }
 }

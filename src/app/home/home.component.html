@@ -1,6 +1,12 @@
-<p>home works!</p>
-<button (click)="CreateForecast()">Create</button>
-
-@for(forecast of forecasts; track forecast) {
-    <p>{{forecast | json}}</p>
-}
+<div>
+    <mat-table [dataSource]="filteredStories" class="mat-elevation-z8">
+        <!-- Position Column -->
+        <ng-container matColumnDef="storyName">
+            <mat-header-cell *matHeaderCellDef> Story </mat-header-cell>
+            <mat-cell *matCellDef="let story"> {{story.storyName}} </mat-cell>
+        </ng-container>
+        
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="StoryClicked(row)"></mat-row>
+    </mat-table>
+</div>

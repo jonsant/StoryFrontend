@@ -27,6 +27,7 @@
     "@azure/msal-browser": "^3.14.0",
     "dotenv": "^16.4.5",
     "material-icons": "^1.13.12",
+    "ngx-debounce-input": "^2.0.1",
     "rxjs": "~7.8.0",
     "ts-node": "^10.9.2",
     "tslib": "^2.3.0",

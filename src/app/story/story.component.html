@@ -1,0 +1,19 @@
+<div id="title"><b>{{story?.storyName}}</b><div>({{status}})</div></div>
+
+<div id="invitees">
+    <mat-chip-set aria-label="Invitees">
+        @for (invitee of story?.invitees; track invitee) {
+            <mat-chip-option [selectable]="false" color="primary">{{invitee}}</mat-chip-option>
+        }
+    </mat-chip-set>
+    
+    <mat-chip-set aria-label="Participants">
+        @for (participant of story?.participants; track participant) {
+            <mat-chip-option [selectable]="false" color="primary" selected>{{participant}}</mat-chip-option>
+        }
+        <!-- <mat-chip color="accent">
+            <img matChipAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" alt="Photo of a Shiba Inu"/>
+            Dog three
+    </mat-chip> -->
+</mat-chip-set>
+</div>

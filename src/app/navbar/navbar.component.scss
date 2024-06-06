@@ -1,3 +1,68 @@
 .example-spacer {
     flex: 1 1 auto;
   }
+
+  #navbar-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  h1 {
+    padding: 0 1rem;
+}
+
+h2 {padding: 1rem;}
+
+mat-toolbar{
+    position:fixed;
+    top:0;
+    z-index: 2;
+}
+
+mat-sidenav-container {
+    height:100%;
+}
+
+// Move the content down so that it won't be hidden by the toolbar
+mat-sidenav {
+    padding-top: 3.5rem;
+    @media screen and (min-width: 600px) {
+      padding-top: 4rem;
+    }
+
+    .entry{
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding:0.75rem;
+    }
+  }
+
+// Move the content down so that it won't be hidden by the toolbar
+mat-sidenav-content{
+    padding-top: 4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    @media screen and (min-width: 600px) {
+        padding-top: 4rem;
+    }
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5rem;
+  max-width: 1024px;
+}
+
+#add-btn {
+  position: absolute;
+  bottom:40px;
+	right:40px;
+  z-index: 9999;
+}
