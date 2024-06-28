@@ -6,6 +6,7 @@ import { LoginFailedComponent } from './login-failed/login-failed.component';
 import { SignupComponent } from './signup/signup.component';
 import { CreateComponent } from './create/create.component';
 import { StoryComponent } from './story/story.component';
+import { InvitesComponent } from './invites/invites.component';
 
 export const routes: Routes = [
     { path: 'signup', component: SignupComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [MsalGuard] },
     { path: 'create', component: CreateComponent, canActivate: [MsalGuard] },
     { path: 'story', component: StoryComponent, canActivate: [MsalGuard] },
+    { path: 'invites', component: InvitesComponent, canActivate: [MsalGuard] },
     { path: '', redirectTo: "signup", pathMatch: 'full' },
 ];

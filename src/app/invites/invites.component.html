@@ -1,0 +1,23 @@
+<div id="list">
+    @if (invites.length === 0) {
+        <label>Inga inbjudningar</label>
+    }
+    @for(invitee of invites; track $index) {
+     <div class="invite">
+        <div class="invite-left">
+            <span>
+                {{invitee.storyName}}
+            </span>
+            <span>
+                {{invitee.creatorUsername}}
+            </span>
+        </div>
+        <div class="invite-right">
+            <span>
+                {{invitee.invitedDate | date}}
+            </span>
+            <mat-icon (click)="AcceptInvite(invitee.inviteeId)">add</mat-icon>
+        </div>
+     </div>   
+    }
+</div>

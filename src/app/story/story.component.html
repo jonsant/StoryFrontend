@@ -1,19 +1,48 @@
-<div id="title"><b>{{story?.storyName}}</b><div>({{status}})</div></div>
-
-<div id="invitees">
-    <mat-chip-set aria-label="Invitees">
-        @for (invitee of story?.invitees; track invitee) {
-            <mat-chip-option [selectable]="false" color="primary">{{invitee}}</mat-chip-option>
+@if (currentUser && story) {
+    <div id="top">
+        <div id="title"><b>{{story?.storyName}}</b><div>({{status}})</div></div>
+        
+        <div id="invitees">
+            <label>Inbjudna medspelare:</label>
+            <mat-chip-set aria-label="Invitees">
+                @for (invitee of story?.invitees; track invitee) {
+                    <mat-chip-option [selectable]="false" color="primary">{{invitee}}</mat-chip-option>
+                }
+            </mat-chip-set>
+            
+            <mat-chip-set aria-label="Participants">
+                @for (participant of story?.participants; track participant) {
+                    @if(participant !== currentUser?.username) {
+                        <mat-chip-option [selectable]="false" color="primary" selected>{{participant}}</mat-chip-option>
+                    }
+                }
+                <!-- <mat-chip color="accent">
+                    <img matChipAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" alt="Photo of a Shiba Inu"/>
+                    Dog three
+                </mat-chip> -->
+            </mat-chip-set>
+            
+        </div>
+        <div id="chat">
+            @for(lobbyMessage of lobbyMessages; track $index) {
+                <div class="lobby-message" [class.current-user-message]="lobbyMessage.userId === currentUser?.userId"
+                [class.other-user-message]="lobbyMessage.userId !== currentUser?.userId">
+                <div class="username">{{lobbyMessage.username === currentUser?.username ? 'Du': lobbyMessage.username}}:</div>
+                <div class="message">{{lobbyMessage.message}}</div>
+            </div>
         }
-    </mat-chip-set>
-    
-    <mat-chip-set aria-label="Participants">
-        @for (participant of story?.participants; track participant) {
-            <mat-chip-option [selectable]="false" color="primary" selected>{{participant}}</mat-chip-option>
-        }
-        <!-- <mat-chip color="accent">
-            <img matChipAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" alt="Photo of a Shiba Inu"/>
-            Dog three
-    </mat-chip> -->
-</mat-chip-set>
+    </div>
 </div>
+
+
+<div id="btns">
+    <mat-form-field class="example-form-field">
+        <mat-label>Skicka chattmeddelande</mat-label>
+        <input matInput type="text" [(ngModel)]="messageInputValue">
+    </mat-form-field>
+    
+    <button mat-mini-fab aria-label="Send" color="primary" (click)="SendLobbyMessage()">
+        <mat-icon>send</mat-icon>
+    </button>
+</div>
+}

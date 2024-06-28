@@ -1,16 +1,11 @@
 :host {
-    // div {
-    //     border-radius: 8px solid red;
-    //     background-color: green;
-    // }
-
     #list {
         display: flex;
         flex-direction: column;
         gap: 1rem;
     }
 
-    .story {
+    .invite {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -20,14 +15,12 @@
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         border-radius: 0.5rem;
 
-        .story-left {
+        .invite-left {
             display: flex;
             flex-direction: column;
-            font-size: larger;
-            font-weight: bold;
         }
 
-        .story-right {
+        .invite-right {
             display: flex;
             flex-direction: row;
             align-items: center;

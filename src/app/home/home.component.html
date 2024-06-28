@@ -1,6 +1,25 @@
-<div>
-    <mat-table [dataSource]="filteredStories" class="mat-elevation-z8">
-        <!-- Position Column -->
+<div id="list">
+
+    @for(story of stories; track $index) {
+        <div class="story">
+            <div class="story-left">
+                <span>
+                    {{story.storyName}}
+                </span>
+                <!-- <span>
+                    {{story}}
+                </span> -->
+            </div>
+            <div class="story-right">
+                <span>
+                    {{story.created| date}}
+                </span>
+                <mat-icon (click)="StoryClicked(story)">arrow_forward_ios</mat-icon>
+            </div>
+         </div>   
+    }
+    <!-- <mat-table [dataSource]="filteredStories" class="mat-elevation-z8"> -->
+<!--      
         <ng-container matColumnDef="storyName">
             <mat-header-cell *matHeaderCellDef> Story </mat-header-cell>
             <mat-cell *matCellDef="let story"> {{story.storyName}} </mat-cell>
@@ -8,5 +27,5 @@
         
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="StoryClicked(row)"></mat-row>
-    </mat-table>
+    </mat-table> -->
 </div>

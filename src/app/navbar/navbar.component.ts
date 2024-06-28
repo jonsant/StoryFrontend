@@ -38,6 +38,7 @@ export class NavbarComponent {
   loggedIn$ = new Subscription();
   profile?: ProfileType;
   profile$ = new Subscription();
+  router = inject(Router);
 
   title = 'material-responsive-sidenav';
   @ViewChild(MatSidenav)
@@ -51,7 +52,6 @@ export class NavbarComponent {
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
-    private router: Router,
     private storyAuthService: StoryAuthService,
     private userService: UserService
   ) {
@@ -71,6 +71,10 @@ export class NavbarComponent {
     this.router.navigate(['/signup']);
   }
 
+  GoToInvites() {
+    this.router.navigate(['/invites']);
+  }
+
   CreateStory() {
     this.router.navigate(['/create']);
   }
@@ -79,8 +83,10 @@ export class NavbarComponent {
     this.observer.observe(['(max-width: 800px)']).pipe(takeUntil(this._destroying$)).subscribe((screenSize) => {
       if (screenSize.matches) {
         this.isMobile = true;
+        console.log("isMobile ", this.isMobile);
       } else {
         this.isMobile = false;
+        console.log("isMobile ", this.isMobile);
       }
     });
 
@@ -89,6 +95,7 @@ export class NavbarComponent {
       if (this.isLoggedIn && this.profile?.id) {
         this.user = await lastValueFrom(this.userService.GetUserById(this.profile.id));
         console.log(this.user);
+        this.userService.SetCurrentUser(this.user);
       }
     });
 

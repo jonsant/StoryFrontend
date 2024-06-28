@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { StoryService } from '../services/StoryService';
 import { Forecast } from '../models/Forecast';
 import { lastValueFrom } from 'rxjs';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, DatePipe, JsonPipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { Story } from '../models/Story';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,10 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.scss',
   imports: [
     JsonPipe,
-    MatTableModule
+    MatTableModule,
+    DatePipe,
+    CommonModule,
+    MatIconModule
   ]
 })
 export class HomeComponent {
