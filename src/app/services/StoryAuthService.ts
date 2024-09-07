@@ -2,7 +2,6 @@ declare var google: any;
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Router } from "@angular/router";
-import { MsalService } from "@azure/msal-angular";
 import { Subject, lastValueFrom, startWith } from "rxjs";
 import { environment } from '../../environments/environment';
 import { ProfileType } from "../models/ProfileType";
@@ -11,7 +10,6 @@ import { ProfileType } from "../models/ProfileType";
 export class StoryAuthService {
     router = inject(Router);
     httpClient = inject(HttpClient);
-    authService = inject(MsalService);
     loggedIn$ = new Subject<boolean>();
     loggedIn: boolean = false;
     // profile: ProfileType | undefined;
@@ -23,11 +21,11 @@ export class StoryAuthService {
     }
 
     async checkLoggedIn() {
-        const isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
-        if (isLoggedIn) {
-            await this.fetchProfileType();
-        }
-        this.SetLoggedInStatus(isLoggedIn);
+        // const isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
+        // if (isLoggedIn) {
+        //     await this.fetchProfileType();
+        // }
+        // this.SetLoggedInStatus(isLoggedIn);
     }
 
     // SignOut() {
