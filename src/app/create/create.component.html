@@ -1,27 +1,30 @@
 <form [formGroup]="createFormGroup">
     <mat-form-field class="example-form-field">
-        <mat-label>Namnge storyn</mat-label>
+        <mat-label>Story name</mat-label>
         <input matInput type="text" formControlName="storyName">
     </mat-form-field>
 
     <mat-form-field class="example-form-field">
-        <mat-label>Lägg till spelare</mat-label>
-        <input #trigger matInput type="text" formControlName="inviteeInput" (search)="InviteeInput()" ngxDebounceInput [debounceTime]="2000" [matAutocomplete]="auto">
-        
-        <button matSuffix mat-icon-button aria-label="Add" (click)="AddInvitee(createFormGroup.controls['inviteeInput'].value); CloseInviteePanel(); $event.preventDefault(); $event.stopPropagation()">
+        <mat-label>Add players</mat-label>
+        <input #trigger matInput type="text" formControlName="inviteeInput" (search)="InviteeInput()" ngxDebounceInput
+            [debounceTime]="2000" [matAutocomplete]="auto">
+
+        <button matSuffix mat-icon-button aria-label="Add"
+            (click)="AddInvitee(createFormGroup.controls['inviteeInput'].value); CloseInviteePanel(); $event.preventDefault(); $event.stopPropagation()">
             <mat-icon>add</mat-icon>
         </button>
-        
+
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             @for (invitee of foundInvitees; track invitee) {
-                <mat-option [value]="invitee.username" (onSelectionChange)="AddInvitee($event.source.value); CloseInviteePanel();">{{invitee.username}}</mat-option>
+            <mat-option [value]="invitee.username"
+                (onSelectionChange)="AddInvitee($event.source.value); CloseInviteePanel();">{{invitee.username}}</mat-option>
             }
         </mat-autocomplete>
     </mat-form-field>
-    
+
     <mat-chip-set aria-label="Invitees">
         @for (invitee of invitees; track invitee) {
-            <mat-chip-option [selectable]="false">{{invitee.username}}</mat-chip-option>
+        <mat-chip-option [selectable]="false">{{invitee.username}}</mat-chip-option>
         }
         <!-- <mat-chip color="accent">
             <img matChipAvatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" alt="Photo of a Shiba Inu"/>
@@ -30,6 +33,6 @@
     </mat-chip-set>
 
     <button color="primary" mat-flat-button (click)="CreateStory()">Skapa</button>
-    
-    
+
+
 </form>

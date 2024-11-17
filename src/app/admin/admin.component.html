@@ -1,0 +1,6 @@
+<mat-form-field class="example-form-field">
+    <mat-label>Add to email whitelist</mat-label>
+    <input matInput type="text" [disabled]="addingToWhitelist" [(ngModel)]="emailWhiteListInput"
+        (keydown.enter)="AddEmailToWhitelistClicked()">
+    <mat-icon matSuffix (click)="AddEmailToWhitelistClicked()">send</mat-icon>
+</mat-form-field>

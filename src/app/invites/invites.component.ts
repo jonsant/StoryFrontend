@@ -20,7 +20,7 @@ export class InvitesComponent {
   invites: Invitee[] = [];
 
   async ngOnInit() {
-    this.invites = await firstValueFrom(this.inviteeService.GetStoryInvites());
+    await this.GetInvites();
   }
 
   async AcceptInvite(inviteeId?: string) {
@@ -28,5 +28,10 @@ export class InvitesComponent {
     let acceptInvite: AcceptInvite = new AcceptInvite();
     acceptInvite.inviteeId = inviteeId;
     await firstValueFrom(this.inviteeService.AcceptInvite(acceptInvite));
+    await this.GetInvites();
+  }
+
+  async GetInvites() {
+    this.invites = await firstValueFrom(this.inviteeService.GetStoryInvites());
   }
 }

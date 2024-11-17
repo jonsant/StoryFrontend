@@ -7,12 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxDebounceInputDirective } from 'ngx-debounce-input';
 import { UserService } from '../services/UserService';
 import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { User } from '../models/User';
+import { CurrentUser, GetUser } from '../models/User';
 import { lastValueFrom } from 'rxjs';
 import { SelectionChange } from '@angular/cdk/collections';
 import { MatChipsModule } from '@angular/material/chips';
 import { StoryService } from '../services/StoryService';
 import { Story } from '../models/Story';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -35,8 +36,9 @@ export class CreateComponent {
   @ViewChild(MatAutocompleteTrigger) autocomplete?: MatAutocompleteTrigger;
   userService = inject(UserService);
   storyService = inject(StoryService);
-  foundInvitees: User[] = [];
-  invitees: User[] = [];
+  router = inject(Router);
+  foundInvitees: GetUser[] = [];
+  invitees: GetUser[] = [];
   story?: Story;
   createFormGroup: FormGroup = new FormGroup({
     storyName: new FormControl<string>("", [Validators.minLength(2)]),
@@ -48,7 +50,6 @@ export class CreateComponent {
   }
 
   async AddInvitee(selection: any) {
-
     if (this.foundInvitees.length === 0) {
       await this.InviteeInput();
     }
@@ -88,6 +89,9 @@ export class CreateComponent {
     });
     this.story.invitees = inv;
     let response = await lastValueFrom(this.storyService.CreateStory(this.story));
+    if (response.storyId && response.storyId !== '') {
+      this.router.navigate(['/home']);
+    }
   }
 
 }

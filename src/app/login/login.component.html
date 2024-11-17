@@ -1,1 +1,44 @@
-<p>logged in!</p>
+<div id="login">
+    <mat-tab-group dynamicHeight (selectedTabChange)="register = !register">
+        <mat-tab label="Log in">
+            <ng-container [ngTemplateOutlet]="emailPassword"></ng-container>
+
+            <button mat-flat-button (click)="loginClicked()">Log in</button>
+
+        </mat-tab>
+
+
+
+        <mat-tab label="Register">
+            <ng-container [ngTemplateOutlet]="emailPassword"></ng-container>
+
+            <mat-form-field>
+                <mat-label>Confirm password</mat-label>
+                <input matInput [type]="hide() ? 'password' : 'text'" [(ngModel)]="confirmPassword"
+                    (keyup.enter)="register ? registerClicked() : null" />
+                <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide()">
+                    <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+            <button mat-flat-button (click)="registerClicked()">Register</button>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #emailPassword>
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="email">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" [(ngModel)]="password"
+            (keyup.enter)="!register ? loginClicked() : null" />
+        <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()">
+            <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+</ng-template>

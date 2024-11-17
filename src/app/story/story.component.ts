@@ -10,8 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { LobbyMessage } from '../models/LobbyMessage';
 import { LobbyMessageService } from '../services/LobbyMessageService';
-import { User } from '../models/User';
 import { UserService } from '../services/UserService';
+import { CurrentUser } from '../models/User';
+import { AuthenticationService } from '../services/AuthenticationService';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-story',
@@ -29,19 +31,20 @@ import { UserService } from '../services/UserService';
 })
 export class StoryComponent {
   storyService = inject(StoryService);
+  router = inject(Router);
   story?: Story;
   status: string = "";
   messageInputValue: string = "";
   lobbyMessages: LobbyMessage[] = [];
   lobbyMessageService = inject(LobbyMessageService);
   userService = inject(UserService);
-  currentUser?: User;
-  currentUser$?: Subscription;
-  // participants: string[] = [];
+  authenticationService = inject(AuthenticationService);
+  currentUser: CurrentUser | null = null;
+  currentUserUpdated$?: Subscription;
 
   async ngOnInit() {
-    this.currentUser$ = this.userService.GetCurrentUser().subscribe(u => {
-      this.currentUser = u;
+    this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
+      this.currentUser = this.authenticationService.getCurrentUser();
     });
     let lb = new LobbyMessage();
     lb.message = "starta nu då!!!!! annars klår jag upp er allihopa! okej? capish?";
@@ -50,14 +53,18 @@ export class StoryComponent {
     await this.GetLobbyMessages();
 
     switch (this.story?.status) {
-      case "Created": this.status = "Väntar på start";
+      case "Created": this.status = "Waiting to start";
         break;
-      case "Active": this.status = "Pågår";
+      case "Active": this.status = "Active";
         break;
-      case "Finished": this.status = "Avslutad";
+      case "Finished": this.status = "Completed";
         break;
       default: "";
     }
+  }
+
+  BackButtonClicked() {
+    this.router.navigate(['/home']);
   }
 
   async GetStory() {
@@ -83,5 +90,6 @@ export class StoryComponent {
     lobbyMessage.userId = this.currentUser.userId;
     let response = await firstValueFrom(this.lobbyMessageService.CreateLobbyMessage(lobbyMessage));
     if (response) await this.GetLobbyMessages();
+    this.messageInputValue = "";
   }
 }

@@ -2,6 +2,7 @@ export class Story {
     storyId?: string;
     storyName?: string;
     creatorUserId?: string;
+    creatorUsername?: string;
     created?: Date;
     finished?: Date;
     status?: string;

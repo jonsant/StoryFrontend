@@ -1,25 +1,49 @@
-<div id="list">
+<mat-tab-group dynamicHeight (selectedTabChange)="showMyStories = !showMyStories">
+    <mat-tab label="My stories">
+        @if(loadingStories) {
+        <mat-spinner [diameter]="30"></mat-spinner>
+        }
+        @else {
+        <ng-container [ngTemplateOutlet]="ownedStories"></ng-container>
+        }
+    </mat-tab>
+    <mat-tab label="Participant stories">
+        @if(loadingStories) {
+        <mat-spinner [diameter]="30"></mat-spinner>
+        }
+        @else {
+        <ng-container [ngTemplateOutlet]="participantStoriesList"></ng-container>
+        }
+    </mat-tab>
+</mat-tab-group>
 
-    @for(story of stories; track $index) {
-        <div class="story">
+<ng-template #participantStoriesList>
+    <div id="list">
+        @if (participantStories.length === 0) {
+        <div id="empty">
+            No stories
+        </div>
+        }
+        @for(story of participantStories; track $index) {
+        <div class="participant-story story" (click)="StoryClicked(story)">
             <div class="story-left">
                 <span>
                     {{story.storyName}}
                 </span>
                 <!-- <span>
-                    {{story}}
-                </span> -->
+                        {{story}}
+                    </span> -->
             </div>
             <div class="story-right">
                 <span>
                     {{story.created| date}}
                 </span>
-                <mat-icon (click)="StoryClicked(story)">arrow_forward_ios</mat-icon>
+                <mat-icon>arrow_forward_ios</mat-icon>
             </div>
-         </div>   
-    }
-    <!-- <mat-table [dataSource]="filteredStories" class="mat-elevation-z8"> -->
-<!--      
+        </div>
+        }
+        <!-- <mat-table [dataSource]="filteredStories" class="mat-elevation-z8"> -->
+        <!--      
         <ng-container matColumnDef="storyName">
             <mat-header-cell *matHeaderCellDef> Story </mat-header-cell>
             <mat-cell *matCellDef="let story"> {{story.storyName}} </mat-cell>
@@ -28,4 +52,43 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="StoryClicked(row)"></mat-row>
     </mat-table> -->
-</div>
+    </div>
+</ng-template>
+
+<ng-template #ownedStories>
+    <div id="list">
+        @if (stories.length === 0) {
+        <div id="empty">
+            No stories
+        </div>
+        }
+        @for(story of stories; track $index) {
+        <div class="story" (click)="StoryClicked(story)">
+            <div class="story-left">
+                <span>
+                    {{story.storyName}}
+                </span>
+                <!-- <span>
+                        {{story}}
+                    </span> -->
+            </div>
+            <div class="story-right">
+                <span>
+                    {{story.created| date}}
+                </span>
+                <mat-icon>arrow_forward_ios</mat-icon>
+            </div>
+        </div>
+        }
+        <!-- <mat-table [dataSource]="filteredStories" class="mat-elevation-z8"> -->
+        <!--      
+        <ng-container matColumnDef="storyName">
+            <mat-header-cell *matHeaderCellDef> Story </mat-header-cell>
+            <mat-cell *matCellDef="let story"> {{story.storyName}} </mat-cell>
+        </ng-container>
+        
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="StoryClicked(row)"></mat-row>
+    </mat-table> -->
+    </div>
+</ng-template>

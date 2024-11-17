@@ -27,6 +27,10 @@ export class StoryService {
         return this.httpClient.get<Story[]>(this.baseUrl + "GetStoriesByUserId");
     }
 
+    GetParticipantStoriesByUserId(): Observable<Story[]> {
+        return this.httpClient.get<Story[]>(this.baseUrl + "GetParticipantStoriesByUserId");
+    }
+
     CreateStory(story: Story): Observable<Story> {
         return this.httpClient.post(this.baseUrl + "CreateStory", story);
     }
