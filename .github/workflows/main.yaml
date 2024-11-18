@@ -25,7 +25,7 @@ jobs:
 
       - name: Copy index file
         working-directory: ./
-        run: cp /home/runner/work/StoryFrontend/StoryFrontend/docs/index.html /home/runner/work/StoryFrontend/StoryFrontend/docs/404.html
+        run: pwd
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
