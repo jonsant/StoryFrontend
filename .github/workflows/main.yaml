@@ -22,9 +22,6 @@ jobs:
         run: npm install && npm run build:prod
         env:
           TESTVAR: ${{ secrets.TESTVAR }}
-          MSALCLIENTID: ${{ secrets.MSALCLIENTID }}
-          MSALAUTHORITY: ${{ secrets.MSALAUTHORITY }}
-          STORYAPISCOPES: ${{ secrets.STORYAPISCOPES }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
