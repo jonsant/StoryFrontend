@@ -32,7 +32,7 @@
         </mat-chip-set>
 
     </div>
-    <div id="chat">
+    <div id="chat" #chat>
         @for(lobbyMessage of lobbyMessages; track $index) {
         <div class="lobby-message" [class.current-user-message]="lobbyMessage.userId === currentUser.userId"
             [class.other-user-message]="lobbyMessage.userId !== currentUser.userId">

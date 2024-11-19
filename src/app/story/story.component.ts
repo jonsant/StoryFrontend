@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { StoryService } from '../services/StoryService';
 import { Story } from '../models/Story';
 import { Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
@@ -41,6 +41,7 @@ export class StoryComponent {
   authenticationService = inject(AuthenticationService);
   currentUser: CurrentUser | null = null;
   currentUserUpdated$?: Subscription;
+  @ViewChild('chat') private chatContainer?: ElementRef;
 
   async ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
@@ -79,6 +80,20 @@ export class StoryComponent {
     if (!this.story.storyId) return;
     let response = await firstValueFrom(this.lobbyMessageService.GetLobbyMessagesByStoryId(this.story.storyId));
     this.lobbyMessages = response;
+
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToElement();
+  }
+
+  scrollToElement(): void {
+    if (!this.chatContainer) return;
+    this.chatContainer.nativeElement.scroll({
+      top: this.chatContainer.nativeElement.scrollHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 
   async SendLobbyMessage() {
