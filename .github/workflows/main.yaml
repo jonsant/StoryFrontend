@@ -25,15 +25,15 @@ jobs:
 
       - name: List folder 1
         working-directory: ./
-        run: ls ./docs/browser/
+        run: ls ./
 
       # - name: Copy index file
       #   working-directory: ./
       #   run: cp ./docs/browser/index.html ./docs/browser/404.html
 
-      - name: List folder 2
-        working-directory: ./
-        run: ls ./docs/browser/
+      # - name: List folder 2
+      #   working-directory: ./
+      #   run: ls ./docs/browser/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
