@@ -23,13 +23,13 @@ jobs:
         env:
           TESTVAR: ${{ secrets.TESTVAR }}
 
-      # - name: Copy index file
-      #   working-directory: ./
-      #   run: cp ./docs/browser/index.html ./docs/404.html
+      - name: Copy index file
+        working-directory: ./
+        run: ls ./docs/
 
-      # - name: Copy index file 2
-      #   working-directory: ./
-      #   run: cp ./docs/browser/index.html ./docs/browser/404.html
+      - name: Copy index file 2
+        working-directory: ./
+        run: cp ./docs/browser/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
