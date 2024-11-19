@@ -5,6 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { HashLocationStrategy, LocationStrategy } from "@angular/common";
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideRouter(routes),
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };
