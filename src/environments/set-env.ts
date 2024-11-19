@@ -10,11 +10,6 @@ const setEnv = () => {
     });
     // `environment.ts` file structure
     const envConfigFile = `export const environment = {
-    msalApiUrl: 'https://graph.microsoft.com/v1.0/me',
-    msalApiScopes: ['user.read'],
-    msalClientId: '${process.env.MSALCLIENTID}',
-    msalAuthority: '${process.env.MSALAUTHORITY}',
-    storyApiScopes: ${process.env.STORYAPISCOPES},
     appVersion: '${appVersion}',
     production: true,
     baseUrl: 'https://storybackend.azurewebsites.net/',
