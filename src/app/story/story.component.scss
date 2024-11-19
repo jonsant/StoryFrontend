@@ -1,10 +1,10 @@
 :host {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 70px);
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    justify-content: space-between;
     width: 100%;
+    overflow: auto;
 
     #top {
         height: 100%;

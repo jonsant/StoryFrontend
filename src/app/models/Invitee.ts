@@ -9,7 +9,3 @@ export class Invitee {
 export class AcceptInvite {
     inviteeId?: string;
 }
-
-export class eeeee {
-
-}
