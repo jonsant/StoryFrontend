@@ -103,9 +103,10 @@
 </div>
 }
 
-@if(isMobile && router.url !== '/story') {
+@if(isMobile && router.url !== '/story' && currentUser !== null) {
 <div id="add-btn">
-    <button mat-fab color="primary" aria-label="Create story" (click)="CreateStory()">
+    <button mat-fab extended color="primary" aria-label="Create story" (click)="CreateStory()">
+        Create story
         <mat-icon>add</mat-icon>
     </button>
 </div>

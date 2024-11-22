@@ -1,5 +1,5 @@
 <mat-tab-group dynamicHeight (selectedTabChange)="showMyStories = !showMyStories">
-    <mat-tab label="My stories">
+    <mat-tab label="Created by me">
         @if(loadingStories) {
         <mat-spinner [diameter]="30"></mat-spinner>
         }
@@ -7,7 +7,7 @@
         <ng-container [ngTemplateOutlet]="ownedStories"></ng-container>
         }
     </mat-tab>
-    <mat-tab label="Participant stories">
+    <mat-tab label="Stories I've joined">
         @if(loadingStories) {
         <mat-spinner [diameter]="30"></mat-spinner>
         }
