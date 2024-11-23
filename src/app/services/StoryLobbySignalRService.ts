@@ -58,4 +58,11 @@ export class StoryLobbySignalRService {
             });
         });
     }
+
+    stopConnection() {
+        if (this.hubConnection) {
+            this.hubConnection.stop();
+            // this.hubConnection = undefined;
+        }
+    }
 }

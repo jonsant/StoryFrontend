@@ -119,5 +119,6 @@ export class StoryComponent {
     this.currentUserUpdated$ && this.currentUserUpdated$.unsubscribe();
     this.lobbyHubSignalRConnection$ && this.lobbyHubSignalRConnection$.unsubscribe();
     this.joinedLobby$ && this.joinedLobby$.unsubscribe();
+    this.storyLobbySignalRService.stopConnection();
   }
 }
