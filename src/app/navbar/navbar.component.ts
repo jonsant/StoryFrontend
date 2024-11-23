@@ -108,6 +108,10 @@ export class NavbarComponent {
     this.router.navigate(['/admin']);
   }
 
+  GoToSettings() {
+    this.router.navigate(['/settings']);
+  }
+
   CreateStory() {
     this.router.navigate(['/create']);
   }

@@ -9,6 +9,7 @@ import { InvitesComponent } from './invites/invites.component';
 import { authGuard } from './guards/auth/auth.guard';
 import { AdminComponent } from './admin/admin.component';
 import { adminGuard } from './guards/admin/admin.guard';
+import { SettingsComponent } from './settings/settings.component';
 
 export const routes: Routes = [
     { path: 'signup', component: SignupComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: 'create', component: CreateComponent, canActivate: [authGuard] },
     { path: 'story/:storyId', component: StoryComponent, canActivate: [authGuard] },
     { path: 'invites', component: InvitesComponent, canActivate: [authGuard] },
+    { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
     { path: 'admin', component: AdminComponent, canActivate: [authGuard, adminGuard] },
     { path: '', redirectTo: "login", pathMatch: 'full' },
 ];

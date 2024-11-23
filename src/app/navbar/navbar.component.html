@@ -20,7 +20,22 @@
                     }
                 </span>
             </a>
-            }
+            <a mat-list-item (click)="GoToSettings()">
+                <span class="entry">
+                    <mat-icon>settings</mat-icon>
+                    @if(!isCollapsed) {
+                    <span>Settings</span>
+                    }
+                </span>
+            </a>
+            <a mat-list-item (click)="Logout()">
+                <span class="entry">
+                    <mat-icon>logout</mat-icon>
+                    @if(!isCollapsed) {
+                    <span>Log out</span>
+                    }
+                </span>
+            </a>
             @if (currentUser?.isAdmin) {
             <a mat-list-item (click)="GoToAdmin()">
                 <span class="entry">
@@ -31,15 +46,6 @@
                 </span>
             </a>
             }
-            @if(currentUser !== null) {
-            <a mat-list-item (click)="Logout()">
-                <span class="entry">
-                    <mat-icon>logout</mat-icon>
-                    @if(!isCollapsed) {
-                    <span>Log out</span>
-                    }
-                </span>
-            </a>
             }
         </mat-nav-list>
     </mat-sidenav>
@@ -74,6 +80,10 @@
         <button mat-button aria-label="Invites" (click)="GoToInvites()">
             <span>Invites</span>
             <mat-icon>diversity_3</mat-icon>
+        </button>
+        <button mat-button aria-label="Invites" (click)="GoToSettings()">
+            <span>Settings</span>
+            <mat-icon>settings</mat-icon>
         </button>
         <span>{{currentUser.username}}</span>
         @if(currentUser.isAdmin) {

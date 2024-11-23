@@ -1,14 +1,14 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, OnDestroy } from "@angular/core";
 import { Forecast } from "../models/Forecast";
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from "rxjs";
+import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 import { Register, RegisterResponse } from "../models/Register";
 import { CurrentUser } from "../models/User";
 import { Login, LoginResponse } from "../models/Login";
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService {
+export class AuthenticationService implements OnDestroy {
     private registerUrl = "Register";
     private loginUrl = "Login";
     private forecastTestUrl = "GetForecastBackendTest";
@@ -40,6 +40,24 @@ export class AuthenticationService {
         return currentUserItem === null ? null : JSON.parse(currentUserItem);
     }
 
+    public getCurrentUserRefresh(): Observable<LoginResponse> {
+        return this.httpClient.get<LoginResponse>(environment.baseUrl + 'GetCurrentUser');
+    }
+
+    public async refreshCurrentUser() {
+        let result = await firstValueFrom(this.getCurrentUserRefresh());
+        if (!result.result || result.token === '') return;
+        let user = CurrentUser.Create(
+            result.token,
+            result.userId,
+            result.username,
+            result.email,
+            result.roles
+        );
+        this.saveCurrentUser(user);
+        this.currentUserUpdated$.next(true);
+    }
+
     public getCurrentUserUpdated$() {
         return this.currentUserUpdated$.asObservable();
     }
@@ -48,5 +66,9 @@ export class AuthenticationService {
         localStorage.removeItem('CurrentUser');
         this.currentUser = null;
         this.currentUserUpdated$.next(true);
+    }
+
+    ngOnDestroy(): void {
+
     }
 }

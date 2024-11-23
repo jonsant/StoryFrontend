@@ -1,0 +1,25 @@
+<h4>{{currentUser?.username}}</h4>
+
+<mat-form-field class="example-form-field">
+    <mat-label>Change username</mat-label>
+    <input matInput type="text" [disabled]="changingUsername" [(ngModel)]="usernameInput" (input)="UsernameInput()"
+        (keydown.enter)="CheckUsernameAvailable()" ngxDebounceInput [debounceTime]="2000"
+        (search)="CheckUsernameAvailable()">
+    @if (usernameAvailable !== undefined && usernameAvailable === false) {
+    <!-- <mat-error>Username already taken</mat-error> -->
+    <mat-hint align="start">Username is already taken</mat-hint>
+    }
+    @if (usernameInput === currentUser?.username) {
+    <mat-hint align="start">Username is already yours!</mat-hint>
+    }
+    @if(searchingUsername || changingUsername) {
+    <mat-spinner id="spinner" matSuffix [diameter]="20"></mat-spinner>
+    }
+    @if (usernameAvailable) {
+    <mat-hint align="start">Username is available!</mat-hint>
+    }
+</mat-form-field>
+<button mat-flat-button aria-label="New story" (click)="ChangeUsername()" [disabled]="!usernameAvailable"
+    color="primary">Change username
+    <mat-icon>save</mat-icon>
+</button>

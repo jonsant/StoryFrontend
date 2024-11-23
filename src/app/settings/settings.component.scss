@@ -1,0 +1,11 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    #spinner {
+        margin-right: 0.5rem;
+    }
+}
