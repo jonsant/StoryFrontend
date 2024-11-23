@@ -3,7 +3,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Component, Inject, ViewChild, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, ParamMap, Router, RouterModule } from '@angular/router';
 import { Observable, Subject, Subscription, filter, lastValueFrom, takeUntil } from 'rxjs';
 import { StoryAuthService } from '../services/StoryAuthService';
 import { ProfileType } from '../models/ProfileType';
@@ -44,10 +44,20 @@ export class NavbarComponent {
   isCollapsed = true;
   currentUser: CurrentUser | null = null;
   currentUserUpdated$?: Subscription;
+  route: ActivatedRoute = inject(ActivatedRoute);
+  showCreateStoryBtn: boolean = true;
+  routeChanges$?: Subscription;
 
   async ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
+    });
+
+    this.routeChanges$ = this.router.events.subscribe(val => {
+      if (val instanceof NavigationEnd) {
+        if (val.url.startsWith('/story/')) this.showCreateStoryBtn = false;
+        else this.showCreateStoryBtn = true;
+      }
     });
 
     this.observer.observe(['(max-width: 800px)']).pipe(takeUntil(this._destroying$)).subscribe((screenSize) => {
@@ -115,5 +125,6 @@ export class NavbarComponent {
     this._destroying$.next(undefined);
     this._destroying$.complete();
     this.currentUserUpdated$ && this.currentUserUpdated$.unsubscribe();
+    this.routeChanges$ && this.routeChanges$.unsubscribe();
   }
 }

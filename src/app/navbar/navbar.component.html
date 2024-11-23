@@ -103,7 +103,7 @@
 </div>
 }
 
-@if(isMobile && router.url !== '/story' && currentUser !== null) {
+@if(isMobile && showCreateStoryBtn && currentUser !== null) {
 <div id="add-btn">
     <button mat-fab extended color="primary" aria-label="Create story" (click)="CreateStory()">
         Create story
