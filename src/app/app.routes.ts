@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'login-failed', component: LoginFailedComponent },
     { path: 'home', component: HomeComponent, canActivate: [authGuard] },
     { path: 'create', component: CreateComponent, canActivate: [authGuard] },
-    { path: 'story', component: StoryComponent, canActivate: [authGuard] },
+    { path: 'story/:storyId', component: StoryComponent, canActivate: [authGuard] },
     { path: 'invites', component: InvitesComponent, canActivate: [authGuard] },
     { path: 'admin', component: AdminComponent, canActivate: [authGuard, adminGuard] },
     { path: '', redirectTo: "login", pathMatch: 'full' },

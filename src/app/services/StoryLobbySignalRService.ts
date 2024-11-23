@@ -11,21 +11,21 @@ import { LobbyMessage } from '../models/LobbyMessage';
     providedIn: 'root',
 })
 export class StoryLobbySignalRService {
-    private hubConnection: signalR.HubConnection;
+    private hubConnection?: signalR.HubConnection;
     authService = inject(AuthenticationService);
     sessionStorageService = inject(SessionStorageService);
 
     constructor() {
+    }
+
+    startConnection(currentStoryId: string): Observable<void> {
         let currentStory = this.sessionStorageService.GetCurrentStoryId() ?? "";
         let t = this.authService.getCurrentUser()?.token ?? "";
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(environment.baseUrl + 'lobbyhub/' + currentStory, { accessTokenFactory: () => t })
+            .withUrl(environment.baseUrl + 'lobbyhub/' + currentStoryId, { accessTokenFactory: () => t })
             .build();
-    }
-
-    startConnection(): Observable<void> {
         return new Observable<void>((observer) => {
-            this.hubConnection
+            this.hubConnection!
                 .start()
                 .then(() => {
                     console.log('Connection established with StoryLobby hub');
@@ -41,19 +41,19 @@ export class StoryLobbySignalRService {
 
     receiveMessage(): Observable<string> {
         return new Observable<string>((observer) => {
-            this.hubConnection.on('ReceiveMessage', (message: string) => {
+            this.hubConnection!.on('ReceiveMessage', (message: string) => {
                 observer.next(message);
             });
         });
     }
 
     sendMessage(message: string): void {
-        this.hubConnection.invoke('SendMessage', message);
+        this.hubConnection!.invoke('SendMessage', message);
     }
 
     joinedLobby(): Observable<LobbyMessage> {
         return new Observable<LobbyMessage>((observer) => {
-            this.hubConnection.on('NewLobbyMessage', (message: LobbyMessage) => {
+            this.hubConnection!.on('NewLobbyMessage', (message: LobbyMessage) => {
                 observer.next(message);
             });
         });

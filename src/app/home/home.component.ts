@@ -70,6 +70,6 @@ export class HomeComponent {
     let story = row as Story;
     if (!story.storyId) return;
     sessionStorage.setItem("currentStoryId", story.storyId);
-    this.router.navigate(['story']);
+    this.router.navigate(['story', story.storyId]);
   }
 }
