@@ -14,6 +14,7 @@ import { UserService } from '../services/UserService';
 import { CurrentUser } from '../models/User';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { Router } from '@angular/router';
+import { StoryLobbySignalRService } from '../services/StoryLobbySignalRService';
 
 @Component({
   selector: 'app-story',
@@ -31,6 +32,7 @@ import { Router } from '@angular/router';
 })
 export class StoryComponent {
   storyService = inject(StoryService);
+  storyLobbySignalRService = inject(StoryLobbySignalRService);
   router = inject(Router);
   story?: Story;
   status: string = "";
@@ -41,15 +43,20 @@ export class StoryComponent {
   authenticationService = inject(AuthenticationService);
   currentUser: CurrentUser | null = null;
   currentUserUpdated$?: Subscription;
+  lobbyHubSignalRConnection$?: Subscription;
+  joinedLobby$?: Subscription;
   @ViewChild('chat') private chatContainer?: ElementRef;
 
   async ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
+
+      this.lobbyHubSignalRConnection$ = this.storyLobbySignalRService.startConnection().subscribe(() => {
+        this.joinedLobby$ = this.storyLobbySignalRService.joinedLobby().subscribe(message => {
+          this.lobbyMessages.push(message);
+        });
+      });
     });
-    let lb = new LobbyMessage();
-    lb.message = "starta nu då!!!!! annars klår jag upp er allihopa! okej? capish?";
-    lb.username = "story-user-slkjfslfaj";
     await this.GetStory();
     await this.GetLobbyMessages();
 
@@ -104,7 +111,13 @@ export class StoryComponent {
     lobbyMessage.message = this.messageInputValue;
     lobbyMessage.userId = this.currentUser.userId;
     let response = await firstValueFrom(this.lobbyMessageService.CreateLobbyMessage(lobbyMessage));
-    if (response) await this.GetLobbyMessages();
+    // if (response) await this.GetLobbyMessages();
     this.messageInputValue = "";
+  }
+
+  ngOnDestroy() {
+    this.currentUserUpdated$ && this.currentUserUpdated$.unsubscribe();
+    this.lobbyHubSignalRConnection$ && this.lobbyHubSignalRConnection$.unsubscribe();
+    this.joinedLobby$ && this.joinedLobby$.unsubscribe();
   }
 }

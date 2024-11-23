@@ -23,6 +23,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@microsoft/signalr": "^8.0.7",
     "dotenv": "^16.4.5",
     "material-icons": "^1.13.12",
     "ngx-debounce-input": "^2.0.1",

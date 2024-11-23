@@ -114,5 +114,6 @@ export class NavbarComponent {
   ngOnDestroy(): void {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+    this.currentUserUpdated$ && this.currentUserUpdated$.unsubscribe();
   }
 }
