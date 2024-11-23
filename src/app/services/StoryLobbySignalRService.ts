@@ -22,7 +22,7 @@ export class StoryLobbySignalRService {
         let currentStory = this.sessionStorageService.GetCurrentStoryId() ?? "";
         let t = this.authService.getCurrentUser()?.token ?? "";
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(environment.baseUrl + 'lobbyhub/' + currentStoryId, { accessTokenFactory: () => t })
+            .withUrl(environment.baseUrl + 'storyhub/' + currentStoryId, { accessTokenFactory: () => t })
             .build();
         return new Observable<void>((observer) => {
             this.hubConnection!

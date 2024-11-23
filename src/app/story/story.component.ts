@@ -45,7 +45,7 @@ export class StoryComponent {
   sessionStorageService = inject(SessionStorageService);
   currentUser: CurrentUser | null = null;
   currentUserUpdated$?: Subscription;
-  lobbyHubSignalRConnection$?: Subscription;
+  storyHubSignalRConnection$?: Subscription;
   joinedLobby$?: Subscription;
   currentStoryId: string | null = null;
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -59,7 +59,7 @@ export class StoryComponent {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
 
-      this.lobbyHubSignalRConnection$ = this.storyLobbySignalRService.startConnection(this.currentStoryId!).subscribe(() => {
+      this.storyHubSignalRConnection$ = this.storyLobbySignalRService.startConnection(this.currentStoryId!).subscribe(() => {
         this.joinedLobby$ = this.storyLobbySignalRService.joinedLobby().subscribe(message => {
           this.lobbyMessages.push(message);
         });
@@ -125,7 +125,7 @@ export class StoryComponent {
 
   ngOnDestroy() {
     this.currentUserUpdated$ && this.currentUserUpdated$.unsubscribe();
-    this.lobbyHubSignalRConnection$ && this.lobbyHubSignalRConnection$.unsubscribe();
+    this.storyHubSignalRConnection$ && this.storyHubSignalRConnection$.unsubscribe();
     this.joinedLobby$ && this.joinedLobby$.unsubscribe();
     this.storyLobbySignalRService.stopConnection();
   }
