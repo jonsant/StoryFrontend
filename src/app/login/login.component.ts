@@ -57,6 +57,7 @@ export class LoginComponent {
 
   async loginClicked() {
     this.login$ = this.authenticationService.login(Login.Create(this.email, this.password)).subscribe(result => {
+      // console.("lkjfadsljsaölfdkjasölfkjaslfkj!!!!!!!!!!!!!!2");
       if (!result.result || result.token === '') return;
       let user = CurrentUser.Create(
         result.token,
