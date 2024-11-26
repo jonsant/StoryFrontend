@@ -11,7 +11,7 @@ export class AdminService {
     constructor(private httpClient: HttpClient) {
     }
 
-    AddEmail(addEmail: AddEmail): Observable<string | null> {
-        return this.httpClient.post<string | null>(this.baseUrl + "AddEmail", addEmail);
+    AddEmail(addEmail: AddEmail): Observable<AddEmail> {
+        return this.httpClient.post<AddEmail>(this.baseUrl + "AddEmail", addEmail);
     }
 }

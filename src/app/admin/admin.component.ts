@@ -31,13 +31,17 @@ export class AdminComponent {
   async AddEmailToWhitelistClicked() {
     if (this.emailWhiteListInput === '') return;
     this.addingToWhitelist = true;
-    try {
-
-      let response = await firstValueFrom(this.adminService.AddEmail(AddEmail.Create(this.emailWhiteListInput)));
-      if (response !== null) this._snackBar.open("Email added", "Close", { duration: 3000 });
-    } catch (ex) {
+    // try {
+    let response = await firstValueFrom(this.adminService.AddEmail(AddEmail.Create(this.emailWhiteListInput)));
+    // console.log("reeesepon ", response);
+    if (response.email.toLowerCase() === this.emailWhiteListInput.toLowerCase()) {
+      this._snackBar.open("Email added", "Close", { duration: 3000 });
+    }
+    else {
       this._snackBar.open("Email couldn't be added", "Close", { duration: 3000 });
     }
+    // } catch (ex) {
+    // }
     this.emailWhiteListInput = '';
     this.addingToWhitelist = false;
   }
