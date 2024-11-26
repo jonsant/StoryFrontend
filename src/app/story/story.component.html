@@ -49,7 +49,7 @@
 
     <!-- Current player is creator and can start the story -->
     @if (story.status === 'Created' && story.creatorUserId === currentUser.userId) {
-    <button mat-flat-button color="primary" (click)="StartStory()">Start</button>
+    <button id="start-button" mat-flat-button color="primary" (click)="StartStory()">Start</button>
     }
 
     <!-- ACTIVE ---------------------------------------------------------->
@@ -95,19 +95,22 @@
     <div class="entry">
         <h2>1. Start the story</h2>
         <mat-form-field class="example-form-field">
-            <textarea matInput placeholder="E.g. Once upon a time there was a fish named Bob." type="text"
+            <textarea matInput [disabled]="entrySubmitted"
+                placeholder="E.g. Once upon a time there was a fish named Bob." type="text"
                 [(ngModel)]="entryFirstInputValue"></textarea>
         </mat-form-field>
 
         <h2>2. Give the next player half a sentence to finish</h2>
         <mat-form-field class="example-form-field">
             <!-- <mat-label> </mat-label> -->
-            <textarea matInput placeholder="E.g. One day, Bob was going" type="text"
+            <textarea matInput [disabled]="entrySubmitted" placeholder="E.g. One day, Bob was going" type="text"
                 [(ngModel)]="entrySecondInputValue"></textarea>
         </mat-form-field>
     </div>
-    <button mat-flat-button color="primary" [disabled]="entryFirstInputValue === '' || entrySecondInputValue === ''"
-        (click)="SubmitEntry()">Submit</button>
+    <button mat-flat-button color="primary"
+        [disabled]="(entryFirstInputValue === '' || entrySecondInputValue === '') || entrySubmitted"
+        (click)="SubmitEntry()">Submit @if(entrySubmitted){<ng-container
+            *ngTemplateOutlet="loadingbutton"></ng-container>}</button>
 
 </ng-template>
 
@@ -116,23 +119,29 @@
         <h2>1. Finish this sentence from the previous player</h2>
         <span>"{{story?.sentenceToFinish}}"...</span>
         <mat-form-field class="example-form-field">
-            <textarea matInput type="text" [(ngModel)]="entryFirstInputValue"></textarea>
+            <textarea matInput [disabled]="entrySubmitted" type="text" [(ngModel)]="entryFirstInputValue"></textarea>
         </mat-form-field>
         @if (story?.creatorUserId === currentUser?.userId) {
-        <button class="centered" mat-flat-button color="primary" [disabled]="entryFirstInputValue === ''"
-            (click)="EndStory()">End
-            story</button>
+        <button class="centered" mat-flat-button color="primary"
+            [disabled]="entryFirstInputValue === '' || entrySubmitted" (click)="EndStory()">End
+            story @if(entrySubmitted){<ng-container *ngTemplateOutlet="loadingbutton"></ng-container>}</button>
         <h2 class="centered">Or</h2>
         }
         <h2>2. Give the next player half a sentence to finish</h2>
         <mat-form-field class="example-form-field">
             <!-- <mat-label> </mat-label> -->
-            <textarea matInput placeholder="E.g. One day, Bob was going" type="text"
+            <textarea matInput [disabled]="entrySubmitted" placeholder="E.g. One day, Bob was going" type="text"
                 [(ngModel)]="entrySecondInputValue"></textarea>
         </mat-form-field>
     </div>
     <button class="centered" mat-flat-button color="primary"
-        [disabled]="entryFirstInputValue === '' || entrySecondInputValue === ''" (click)="SubmitEntry()">Submit</button>
+        [disabled]="(entryFirstInputValue === '' || entrySecondInputValue === '') || entrySubmitted"
+        (click)="SubmitEntry()">Submit @if(entrySubmitted){<ng-container
+            *ngTemplateOutlet="loadingbutton"></ng-container>}</button>
+</ng-template>
+
+<ng-template #loadingbutton>
+    <mat-icon id="spinner-icon"><mat-spinner [diameter]="15"></mat-spinner></mat-icon>
 </ng-template>
 
 <ng-template #waitforturn>

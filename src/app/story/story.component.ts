@@ -19,6 +19,7 @@ import { SessionStorageService } from '../services/SessionStorageService';
 import { CommonModule } from '@angular/common';
 import { CreateEntry } from '../models/StoryEntry';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-story',
@@ -31,7 +32,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     MatButtonModule,
     CommonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './story.component.html',
   styleUrl: './story.component.scss'
@@ -59,6 +61,7 @@ export class StoryComponent {
   currentStoryId: string | null = null;
   finalEntryClicked?: string = "";
   route: ActivatedRoute = inject(ActivatedRoute);
+  entrySubmitted: boolean = false;
   @ViewChild('chat') private chatContainer?: ElementRef;
 
   async ngOnInit() {
@@ -110,6 +113,7 @@ export class StoryComponent {
       await this.GetStory();
       this.entryFirstInputValue = "";
       this.entrySecondInputValue = "";
+      this.entrySubmitted = false;
       // }
     });
   }
@@ -178,6 +182,7 @@ export class StoryComponent {
   async SubmitEntry() {
     if (this.entryFirstInputValue === '' || this.entrySecondInputValue === '') return;
     if (!this.story?.storyId) return;
+    this.entrySubmitted = true;
     let response = await firstValueFrom(this.storyService.CreateEntry(CreateEntry.Create(
       this.story?.storyId,
       this.entryFirstInputValue,
@@ -189,6 +194,7 @@ export class StoryComponent {
   async EndStory() {
     if (this.entryFirstInputValue === '') return;
     if (!this.story?.storyId) return;
+    this.entrySubmitted = true;
     let response = await firstValueFrom(this.storyService.EndStory(CreateEntry.Create(
       this.story?.storyId,
       this.entryFirstInputValue,

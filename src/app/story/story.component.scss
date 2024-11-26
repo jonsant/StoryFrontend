@@ -110,6 +110,17 @@
         height: 100%;
     }
 
+    button {
+        align-self: center;
+        // display: flex;
+        // flex-direction: row;
+        // width: 100%;
+    }
+
+    #spinner-icon {
+        align-self: center;
+    }
+
     #final-story {
         display: flex;
         flex-direction: column;
