@@ -22,7 +22,8 @@
             @if(currentUser !== null) {
             <a mat-list-item (click)="GoToInvites()">
                 <span class="entry">
-                    <mat-icon>diversity_3</mat-icon>
+                    <mat-icon [matBadge]="numberOfNewInvites > 0 ? numberOfNewInvites : null"
+                        matBadgeSize="small">diversity_3</mat-icon>
                     @if(!isCollapsed) {
                     <span>Invites</span>
                     }
@@ -88,11 +89,12 @@
             <span>New story</span>
             <mat-icon>add</mat-icon>
         </button>
-        <button mat-button aria-label="Invites" (click)="GoToInvites()">
+        <button mat-button aria-label="Invites" (click)="GoToInvites()"
+            [matBadge]="numberOfNewInvites > 0 ? numberOfNewInvites : null" matBadgeSize="small">
             <span>Invites</span>
             <mat-icon>diversity_3</mat-icon>
         </button>
-        <button mat-button aria-label="Invites" (click)="GoToSettings()">
+        <button mat-button aria-label="Settings" (click)="GoToSettings()">
             <span>Settings</span>
             <mat-icon>settings</mat-icon>
         </button>
