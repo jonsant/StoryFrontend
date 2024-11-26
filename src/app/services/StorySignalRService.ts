@@ -6,6 +6,7 @@ import { AuthenticationService } from './AuthenticationService';
 import { SessionStorageService } from './SessionStorageService';
 import { GetUser } from '../models/User';
 import { LobbyMessage } from '../models/LobbyMessage';
+import { Story } from '../models/Story';
 
 @Injectable({
     providedIn: 'root',
@@ -23,6 +24,7 @@ export class StoryLobbySignalRService {
         let t = this.authService.getCurrentUser()?.token ?? "";
         this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(environment.baseUrl + 'storyhub/' + currentStoryId, { accessTokenFactory: () => t })
+            .withAutomaticReconnect() // enable AutoReconnect
             .build();
         return new Observable<void>((observer) => {
             this.hubConnection!
@@ -36,6 +38,23 @@ export class StoryLobbySignalRService {
                     console.error('Error connecting to StoryLobby hub:', error);
                     observer.error(error);
                 });
+        });
+
+    }
+
+    reconnecting(): Observable<Error | undefined> {
+        return new Observable<Error | undefined>((observer) => {
+            this.hubConnection!.onreconnecting(error => {
+                observer.next(error);
+            });
+        });
+    }
+
+    reconnected(): Observable<string | undefined> {
+        return new Observable<string | undefined>((observer) => {
+            this.hubConnection!.onreconnected(connectionId => {
+                observer.next(connectionId)
+            });
         });
     }
 
@@ -55,6 +74,22 @@ export class StoryLobbySignalRService {
         return new Observable<LobbyMessage>((observer) => {
             this.hubConnection!.on('NewLobbyMessage', (message: LobbyMessage) => {
                 observer.next(message);
+            });
+        });
+    }
+
+    storyChanged(): Observable<Story> {
+        return new Observable<Story>((observer) => {
+            this.hubConnection!.on('StoryChanged', (story: Story) => {
+                observer.next(story);
+            });
+        });
+    }
+
+    newEntry(): Observable<string> {
+        return new Observable<string>((observer) => {
+            this.hubConnection!.on('NewEntry', (currentPlayerId: string) => {
+                observer.next(currentPlayerId);
             });
         });
     }

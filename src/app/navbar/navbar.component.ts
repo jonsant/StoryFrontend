@@ -13,6 +13,10 @@ import { MatNavList } from '@angular/material/list';
 import { UserService } from '../services/UserService';
 import { CurrentUser } from '../models/User';
 import { AuthenticationService } from '../services/AuthenticationService';
+import { UserSignalRService } from '../services/UserSignalRService';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatBadgeModule } from '@angular/material/badge';
+import { InviteeService } from '../services/InviteeService';
 
 @Component({
   selector: 'app-navbar',
@@ -24,7 +28,9 @@ import { AuthenticationService } from '../services/AuthenticationService';
     MatButtonModule,
     CommonModule,
     MatSidenavModule,
-    MatNavList
+    MatNavList,
+    MatTabsModule,
+    MatBadgeModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -47,16 +53,27 @@ export class NavbarComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   showCreateStoryBtn: boolean = true;
   routeChanges$?: Subscription;
+  newInvite$?: Subscription;
+  invitesService = inject(InviteeService);
+  numberOfNewInvites: number = 0;
+  links = ['/home', '/invites', '/settings'];
+  activeLink = this.links[0];
 
   async ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
+
+      this.newInvite$ = this.invitesService.GetNewInviteRecieved().subscribe(invite => {
+        if (!this.router.url.includes('/invites')) this.numberOfNewInvites++;
+      });
     });
 
     this.routeChanges$ = this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
         if (val.url.startsWith('/story/')) this.showCreateStoryBtn = false;
         else this.showCreateStoryBtn = true;
+
+        if (val.url.startsWith('/invites')) this.numberOfNewInvites = 0;
       }
     });
 

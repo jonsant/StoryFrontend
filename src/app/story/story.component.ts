@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { StoryService } from '../services/StoryService';
-import { Story } from '../models/Story';
+import { StartStory, Story } from '../models/Story';
 import { Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,8 +14,11 @@ import { UserService } from '../services/UserService';
 import { CurrentUser } from '../models/User';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StoryLobbySignalRService } from '../services/StoryLobbySignalRService';
+import { StoryLobbySignalRService } from '../services/StorySignalRService';
 import { SessionStorageService } from '../services/SessionStorageService';
+import { CommonModule } from '@angular/common';
+import { CreateEntry } from '../models/StoryEntry';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-story',
@@ -26,7 +29,9 @@ import { SessionStorageService } from '../services/SessionStorageService';
     MatIconModule,
     MatInputModule,
     FormsModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule,
+    MatTooltipModule
   ],
   templateUrl: './story.component.html',
   styleUrl: './story.component.scss'
@@ -38,6 +43,8 @@ export class StoryComponent {
   story?: Story;
   status: string = "";
   messageInputValue: string = "";
+  entryFirstInputValue: string = "";
+  entrySecondInputValue: string = "";
   lobbyMessages: LobbyMessage[] = [];
   lobbyMessageService = inject(LobbyMessageService);
   userService = inject(UserService);
@@ -47,12 +54,16 @@ export class StoryComponent {
   currentUserUpdated$?: Subscription;
   storyHubSignalRConnection$?: Subscription;
   joinedLobby$?: Subscription;
+  storyChanges$?: Subscription;
+  newEntry$?: Subscription;
   currentStoryId: string | null = null;
+  finalEntryClicked?: string = "";
   route: ActivatedRoute = inject(ActivatedRoute);
   @ViewChild('chat') private chatContainer?: ElementRef;
 
   async ngOnInit() {
     this.currentStoryId = this.route.snapshot.paramMap.get('storyId');
+    console.log("currrrrrent ", this.currentStoryId);
     if (this.currentStoryId === null) this.currentStoryId = this.sessionStorageService.GetCurrentStoryId();
     if (this.currentStoryId === null) this.router.navigate(['home']);
 
@@ -60,20 +71,56 @@ export class StoryComponent {
       this.currentUser = this.authenticationService.getCurrentUser();
 
       this.storyHubSignalRConnection$ = this.storyLobbySignalRService.startConnection(this.currentStoryId!).subscribe(() => {
-        this.joinedLobby$ = this.storyLobbySignalRService.joinedLobby().subscribe(message => {
-          this.lobbyMessages.push(message);
-        });
+        this.SubscribeLobbyMessages();
+        this.SubscribeStoryChanges();
+        this.SubscribeNewEntry();
       });
     });
     await this.GetStory();
     await this.GetLobbyMessages();
+    this.MapStatusText();
+  }
 
+  SubscribeLobbyMessages() {
+    this.joinedLobby$ = this.storyLobbySignalRService.joinedLobby().subscribe(message => {
+      this.lobbyMessages.push(message);
+    });
+  }
+
+  SubscribeStoryChanges() {
+    this.storyChanges$ = this.storyLobbySignalRService.storyChanged().subscribe(story => {
+      // this.story!.status = status;
+      this.story = story;
+      this.MapStatusText();
+    });
+
+    // this.storyLobbySignalRService.reconnecting().subscribe(error => {
+    //   console.log("efrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ", error);
+    // });
+
+    // this.storyLobbySignalRService.reconnected().subscribe(i => {
+    //   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!! ", i);
+    // });
+  }
+
+  SubscribeNewEntry() {
+    this.newEntry$ = this.storyLobbySignalRService.newEntry().subscribe(async currentPlayerId => {
+      // this.story!.currentPlayerId = currentPlayerId;
+      // if (this.currentUser?.userId === currentPlayerId) {
+      await this.GetStory();
+      this.entryFirstInputValue = "";
+      this.entrySecondInputValue = "";
+      // }
+    });
+  }
+
+  MapStatusText() {
     switch (this.story?.status) {
       case "Created": this.status = "Waiting to start";
         break;
       case "Active": this.status = "Active";
         break;
-      case "Finished": this.status = "Completed";
+      case "Finished": this.status = "Finished";
         break;
       default: "";
     }
@@ -84,10 +131,10 @@ export class StoryComponent {
   }
 
   async GetStory() {
-    const id = sessionStorage.getItem("currentStoryId");
-    if (!id) return;
-    let response = await lastValueFrom(this.storyService.GetStoryById(id));
+    if (this.currentStoryId === null) return;
+    let response = await lastValueFrom(this.storyService.GetStoryById(this.currentStoryId));
     this.story = response;
+    console.log(this.story.numberOfEntries);
   }
 
   async GetLobbyMessages() {
@@ -95,7 +142,6 @@ export class StoryComponent {
     if (!this.story.storyId) return;
     let response = await firstValueFrom(this.lobbyMessageService.GetLobbyMessagesByStoryId(this.story.storyId));
     this.lobbyMessages = response;
-
   }
 
   ngAfterViewChecked() {
@@ -123,10 +169,39 @@ export class StoryComponent {
     this.messageInputValue = "";
   }
 
+  async StartStory() {
+    if (this.story?.status !== 'Created') return;
+    if (!this.story.storyId) return;
+    let response = await firstValueFrom(this.storyService.StartStory(StartStory.Create(this.story.storyId)));
+  }
+
+  async SubmitEntry() {
+    if (this.entryFirstInputValue === '' || this.entrySecondInputValue === '') return;
+    if (!this.story?.storyId) return;
+    let response = await firstValueFrom(this.storyService.CreateEntry(CreateEntry.Create(
+      this.story?.storyId,
+      this.entryFirstInputValue,
+      this.entrySecondInputValue,
+      false
+    )));
+  }
+
+  async EndStory() {
+    if (this.entryFirstInputValue === '') return;
+    if (!this.story?.storyId) return;
+    let response = await firstValueFrom(this.storyService.EndStory(CreateEntry.Create(
+      this.story?.storyId,
+      this.entryFirstInputValue,
+      this.entrySecondInputValue,
+      true
+    )));
+  }
+
   ngOnDestroy() {
     this.currentUserUpdated$ && this.currentUserUpdated$.unsubscribe();
     this.storyHubSignalRConnection$ && this.storyHubSignalRConnection$.unsubscribe();
     this.joinedLobby$ && this.joinedLobby$.unsubscribe();
+    this.storyChanges$ && this.storyChanges$.unsubscribe();
     this.storyLobbySignalRService.stopConnection();
   }
 }

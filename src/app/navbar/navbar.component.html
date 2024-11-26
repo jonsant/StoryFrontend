@@ -1,4 +1,12 @@
 @if(isMobile) {
+<router-outlet></router-outlet>
+
+<!-- <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    @for (link of links; track link) {
+    <a mat-tab-link [routerLink]="link" (click)="activeLink = link" [active]="activeLink == link"> Stories </a>
+    }
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel> -->
 
 <mat-sidenav-container autosize>
     <mat-sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="isMobile ? 'false' : 'true'">
@@ -36,7 +44,7 @@
                     }
                 </span>
             </a>
-            @if (currentUser?.isAdmin) {
+            @if (currentUser.isAdmin) {
             <a mat-list-item (click)="GoToAdmin()">
                 <span class="entry">
                     <mat-icon>admin_panel_settings</mat-icon>
@@ -56,11 +64,14 @@
 
 }
 
-<mat-toolbar>
+<mat-toolbar [class.mobile-toolbar]="isMobile">
     @if (isMobile) {
     <button mat-icon-button aria-label="Menu icon" (click)="toggleMenu()">
         <mat-icon>menu</mat-icon>
     </button>
+    <h5>{{currentUser?.username}}</h5>
+    <mat-icon (click)="GoToInvites()" [matBadge]="numberOfNewInvites > 0 ? numberOfNewInvites : null"
+        matBadgeSize="small">notifications</mat-icon>
     }
 
     @if(!isMobile) {

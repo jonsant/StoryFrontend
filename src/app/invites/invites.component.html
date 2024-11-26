@@ -6,17 +6,20 @@
     <div class="invite">
         <div class="invite-left">
             <span>
-                {{invitee.storyName}}
+                <b>{{invitee.storyName}}</b>
             </span>
             <span>
                 {{invitee.creatorUsername}}
             </span>
         </div>
-        <div class="invite-right">
+        <div class="invite-middle">
             <span>
                 {{invitee.invitedDate | date}}
             </span>
-            <mat-icon (click)="AcceptInvite(invitee.inviteeId)">check</mat-icon>
+        </div>
+        <div class="invite-right">
+            <mat-icon (click)="AcceptInvite(invitee.inviteeId)">add</mat-icon>
+            <!-- <mat-icon (click)="AcceptInvite(invitee.inviteeId)">remove</mat-icon> -->
         </div>
     </div>
     }

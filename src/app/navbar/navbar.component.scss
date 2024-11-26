@@ -23,6 +23,12 @@ mat-toolbar {
   z-index: 2;
 }
 
+.mobile-toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 mat-sidenav-container {
   height: 100%;
 

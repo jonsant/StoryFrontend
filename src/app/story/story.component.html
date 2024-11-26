@@ -7,6 +7,8 @@
         </div>
     </div>
 
+    <!-- CREATED ---------------------------------------------------------->
+    @if (story.status === 'Created') {
     <div id="invitees">
         <label>Players:</label>
         <mat-chip-set aria-label="Invitees">
@@ -43,17 +45,112 @@
         </div>
         }
     </div>
+    }
+
+    <!-- Current player is creator and can start the story -->
+    @if (story.status === 'Created' && story.creatorUserId === currentUser.userId) {
+    <button mat-flat-button color="primary" (click)="StartStory()">Start</button>
+    }
+
+    <!-- ACTIVE ---------------------------------------------------------->
+    @if(story.status === 'Active') {
+
+    <!-- Current players turn -->
+    @if(story.currentPlayerId === currentUser.userId) {
+
+    @if (story.numberOfEntries === 0) {
+    <ng-container *ngTemplateOutlet="firstentry"></ng-container>
+    }
+    @if (story.numberOfEntries && story.numberOfEntries > 0) {
+    <ng-container *ngTemplateOutlet="anyentry"></ng-container>
+    }
+    }
+    <!-- Waiting for players turn -->
+    @if (story.currentPlayerId !== currentUser.userId) {
+    <ng-container *ngTemplateOutlet="waitforturn"></ng-container>
+    }
+    }
+
+    <!-- FINISHED ---------------------------------------------------------->
+    @if (story.status === 'Finished') {
+    <ng-container *ngTemplateOutlet="finalStory"></ng-container>
+    }
+
 </div>
 
-
+@if (story.status === 'Created') {
 <div id="btns">
     <mat-form-field class="example-form-field">
         <mat-label>Send message</mat-label>
         <input matInput type="text" [(ngModel)]="messageInputValue" (keydown.enter)="SendLobbyMessage()">
         <mat-icon matSuffix (click)="SendLobbyMessage()">send</mat-icon>
     </mat-form-field>
-
     <!-- <button mat-mini-fab aria-label="Send" color="primary" (click)="SendLobbyMessage()">
-    </button> -->
+        </button> -->
 </div>
 }
+}
+
+<ng-template #firstentry>
+    <div class="entry">
+        <h2>1. Start the story</h2>
+        <mat-form-field class="example-form-field">
+            <textarea matInput placeholder="E.g. Once upon a time there was a fish named Bob." type="text"
+                [(ngModel)]="entryFirstInputValue"></textarea>
+        </mat-form-field>
+
+        <h2>2. Give the next player half a sentence to finish</h2>
+        <mat-form-field class="example-form-field">
+            <!-- <mat-label> </mat-label> -->
+            <textarea matInput placeholder="E.g. One day, Bob was going" type="text"
+                [(ngModel)]="entrySecondInputValue"></textarea>
+        </mat-form-field>
+    </div>
+    <button mat-flat-button color="primary" [disabled]="entryFirstInputValue === '' || entrySecondInputValue === ''"
+        (click)="SubmitEntry()">Submit</button>
+
+</ng-template>
+
+<ng-template #anyentry>
+    <div class="entry">
+        <h2>1. Finish this sentence from the previous player</h2>
+        <span>"{{story?.sentenceToFinish}}"...</span>
+        <mat-form-field class="example-form-field">
+            <textarea matInput type="text" [(ngModel)]="entryFirstInputValue"></textarea>
+        </mat-form-field>
+        @if (story?.creatorUserId === currentUser?.userId) {
+        <button class="centered" mat-flat-button color="primary" [disabled]="entryFirstInputValue === ''"
+            (click)="EndStory()">End
+            story</button>
+        <h2 class="centered">Or</h2>
+        }
+        <h2>2. Give the next player half a sentence to finish</h2>
+        <mat-form-field class="example-form-field">
+            <!-- <mat-label> </mat-label> -->
+            <textarea matInput placeholder="E.g. One day, Bob was going" type="text"
+                [(ngModel)]="entrySecondInputValue"></textarea>
+        </mat-form-field>
+    </div>
+    <button class="centered" mat-flat-button color="primary"
+        [disabled]="entryFirstInputValue === '' || entrySecondInputValue === ''" (click)="SubmitEntry()">Submit</button>
+</ng-template>
+
+<ng-template #waitforturn>
+    <div id="waiting-for-turn">
+        <h2>Waiting for your turn...</h2>
+    </div>
+</ng-template>
+
+<ng-template #finalStory>
+    <div id="final-story">
+        @if (story) {
+        @for (entry of story.finalStoryEntries; track entry) {
+        <div #tooltip="matTooltip" (click)="tooltip.toggle(); finalEntryClicked = entry.text" id="final-entry"
+            [matTooltip]="'Written by ' + entry.username" [matTooltipPosition]="'right'"
+            [class.final-entry-focus]="finalEntryClicked === entry.text">
+            {{entry.text}}
+        </div>
+        }
+        }
+    </div>
+</ng-template>

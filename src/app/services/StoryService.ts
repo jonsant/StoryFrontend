@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { Forecast } from "../models/Forecast";
 import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
-import { Story } from "../models/Story";
+import { StartStory, Story } from "../models/Story";
+import { CreateEntry } from "../models/StoryEntry";
 
 @Injectable({ providedIn: 'root' })
 export class StoryService {
@@ -33,5 +34,17 @@ export class StoryService {
 
     CreateStory(story: Story): Observable<Story> {
         return this.httpClient.post(this.baseUrl + "CreateStory", story);
+    }
+
+    StartStory(startStory: StartStory): Observable<StartStory> {
+        return this.httpClient.put<StartStory>(this.baseUrl + 'StartStory', startStory);
+    }
+
+    CreateEntry(createEntry: CreateEntry): Observable<CreateEntry> {
+        return this.httpClient.post<CreateEntry>(this.baseUrl + 'CreateEntry', createEntry);
+    }
+
+    EndStory(finalEntry: CreateEntry): Observable<CreateEntry> {
+        return this.httpClient.post<CreateEntry>(this.baseUrl + 'EndStory', finalEntry);
     }
 }
