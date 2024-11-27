@@ -70,7 +70,8 @@ export class NavbarComponent {
 
     this.routeChanges$ = this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
-        if (val.url.startsWith('/story/')) this.showCreateStoryBtn = false;
+        if (val.url.startsWith('/story/') ||
+          val.url.startsWith('/create')) this.showCreateStoryBtn = false;
         else this.showCreateStoryBtn = true;
 
         if (val.url.startsWith('/invites')) this.numberOfNewInvites = 0;

@@ -6,8 +6,14 @@
 
     <mat-form-field class="example-form-field">
         <mat-label>Add players</mat-label>
-        <input #trigger matInput type="text" formControlName="inviteeInput" (search)="InviteeInput()" ngxDebounceInput
-            [debounceTime]="2000" [matAutocomplete]="auto">
+        <input #trigger matInput type="text" (input)="InviteInput()" formControlName="inviteeInput"
+            (search)="InviteeInput()" ngxDebounceInput [debounceTime]="2000" [matAutocomplete]="auto">
+
+        @if(searchingUsers) {
+        <mat-icon matSuffix mat-icon-button>
+            <mat-spinner [diameter]="18"></mat-spinner>
+        </mat-icon>
+        }
 
         <button matSuffix mat-icon-button aria-label="Add"
             (click)="AddInvitee(createFormGroup.controls['inviteeInput'].value); CloseInviteePanel(); $event.preventDefault(); $event.stopPropagation()">
@@ -32,7 +38,8 @@
         </mat-chip> -->
     </mat-chip-set>
 
-    <button color="primary" mat-flat-button (click)="CreateStory()">Skapa</button>
+    <button color="primary" mat-flat-button (click)="CreateStory()"
+        [disabled]="createFormGroup.controls['storyName'].value === '' || this.invitees.length === 0">Create</button>
 
 
 </form>

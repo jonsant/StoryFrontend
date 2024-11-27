@@ -14,6 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { StoryService } from '../services/StoryService';
 import { Story } from '../models/Story';
 import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-create',
@@ -27,7 +28,8 @@ import { Router } from '@angular/router';
     NgxDebounceInputDirective,
     MatAutocompleteModule,
     MatChipsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -40,6 +42,7 @@ export class CreateComponent {
   foundInvitees: GetUser[] = [];
   invitees: GetUser[] = [];
   story?: Story;
+  searchingUsers: boolean = false;
   createFormGroup: FormGroup = new FormGroup({
     storyName: new FormControl<string>("", [Validators.minLength(2)]),
     inviteeInput: new FormControl<string>("")
@@ -70,6 +73,12 @@ export class CreateComponent {
   async InviteeInput() {
     if (this.createFormGroup.controls['inviteeInput'].value === "") return;
     this.foundInvitees = await lastValueFrom(this.userService.GetUserByName(this.createFormGroup.controls['inviteeInput'].value));
+    this.searchingUsers = false;
+  }
+
+  InviteInput() {
+    if (this.createFormGroup.controls['inviteeInput'].value === "") return;
+    this.searchingUsers = true;
   }
 
   CloseInviteePanel() {
