@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { LobbyMessage } from '../models/LobbyMessage';
 import { LobbyMessageService } from '../services/LobbyMessageService';
 import { UserService } from '../services/UserService';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CurrentUser } from '../models/User';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,6 +40,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrl: './story.component.scss'
 })
 export class StoryComponent {
+  private _snackBar = inject(MatSnackBar);
   storyService = inject(StoryService);
   storyLobbySignalRService = inject(StoryLobbySignalRService);
   router = inject(Router);
@@ -58,6 +60,7 @@ export class StoryComponent {
   joinedLobby$?: Subscription;
   storyChanges$?: Subscription;
   newEntry$?: Subscription;
+  inviteAccepted$?: Subscription;
   currentStoryId: string | null = null;
   finalEntryClicked?: string = "";
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -66,7 +69,6 @@ export class StoryComponent {
 
   async ngOnInit() {
     this.currentStoryId = this.route.snapshot.paramMap.get('storyId');
-    console.log("currrrrrent ", this.currentStoryId);
     if (this.currentStoryId === null) this.currentStoryId = this.sessionStorageService.GetCurrentStoryId();
     if (this.currentStoryId === null) this.router.navigate(['home']);
 
@@ -77,6 +79,7 @@ export class StoryComponent {
         this.SubscribeLobbyMessages();
         this.SubscribeStoryChanges();
         this.SubscribeNewEntry();
+        this.SubscribeInviteAccepted();
       });
     });
     await this.GetStory();
@@ -118,6 +121,13 @@ export class StoryComponent {
     });
   }
 
+  SubscribeInviteAccepted() {
+    this.inviteAccepted$ = this.storyLobbySignalRService.inviteAccepted().subscribe(async username => {
+      await this.GetStory();
+      this._snackBar.open(`${username} accepted the invite!`, "Ok", { duration: 3000 });
+    });
+  }
+
   MapStatusText() {
     switch (this.story?.status) {
       case "Created": this.status = "Waiting to start";
@@ -138,7 +148,6 @@ export class StoryComponent {
     if (this.currentStoryId === null) return;
     let response = await lastValueFrom(this.storyService.GetStoryById(this.currentStoryId));
     this.story = response;
-    console.log(this.story.numberOfEntries);
   }
 
   async GetLobbyMessages() {
@@ -208,6 +217,7 @@ export class StoryComponent {
     this.storyHubSignalRConnection$ && this.storyHubSignalRConnection$.unsubscribe();
     this.joinedLobby$ && this.joinedLobby$.unsubscribe();
     this.storyChanges$ && this.storyChanges$.unsubscribe();
+    this.inviteAccepted$ && this.inviteAccepted$.unsubscribe();
     this.storyLobbySignalRService.stopConnection();
   }
 }

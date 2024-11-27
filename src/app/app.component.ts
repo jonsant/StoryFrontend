@@ -6,6 +6,8 @@ import { environment } from '../environments/environment';
 import { Subscription } from 'rxjs';
 import { UserSignalRService } from './services/UserSignalRService';
 import { InviteeService } from './services/InviteeService';
+import { CurrentUser } from './models/User';
+import { AuthenticationService } from './services/AuthenticationService';
 
 @Component({
   selector: 'app-root',
@@ -24,15 +26,22 @@ export class AppComponent {
   newInvite$?: Subscription;
   userSignalRService = inject(UserSignalRService);
   inviteeService = inject(InviteeService);
+  currentUser: CurrentUser | null = null;
+  currentUserUpdated$?: Subscription;
+  authenticationService = inject(AuthenticationService);
 
   ngOnInit(): void {
-    console.log(environment.testvar);
-
-    this.userSignalRService$ = this.userSignalRService.startConnection().subscribe(() => {
-      this.newInvite$ = this.userSignalRService.NewInvite().subscribe(newInvite => {
-        this.inviteeService.SetNewInviteRecieved(newInvite);
+    this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
+      this.currentUser = this.authenticationService.getCurrentUser();
+      if (this.currentUser === null) return;
+      this.userSignalRService$ = this.userSignalRService.startConnection().subscribe(() => {
+        this.newInvite$ = this.userSignalRService.NewInvite().subscribe(newInvite => {
+          this.inviteeService.SetNewInviteRecieved(newInvite);
+        });
       });
     });
+
+
   }
 
   ngOnDestroy(): void {

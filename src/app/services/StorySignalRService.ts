@@ -94,6 +94,14 @@ export class StoryLobbySignalRService {
         });
     }
 
+    inviteAccepted(): Observable<string> {
+        return new Observable<string>((observer) => {
+            this.hubConnection!.on('InviteAccepted', (username: string) => {
+                observer.next(username);
+            });
+        });
+    }
+
     stopConnection() {
         if (this.hubConnection) {
             this.hubConnection.stop();
