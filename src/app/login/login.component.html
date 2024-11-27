@@ -3,7 +3,8 @@
         <mat-tab label="Log in">
             <ng-container [ngTemplateOutlet]="emailPassword"></ng-container>
 
-            <button mat-flat-button (click)="loginClicked()">Log in</button>
+            <button mat-flat-button (click)="loginClicked()" color="primary">Log in</button>
+            <button mat-flat-button (click)="GoToResetPassword()">Reset password</button>
 
         </mat-tab>
 

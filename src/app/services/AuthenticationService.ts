@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable, OnDestroy } from "@angular/core";
 import { Forecast } from "../models/Forecast";
 import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, Subject } from "rxjs";
@@ -6,6 +6,7 @@ import { environment } from "../../environments/environment";
 import { Register, RegisterResponse } from "../models/Register";
 import { CurrentUser } from "../models/User";
 import { Login, LoginResponse } from "../models/Login";
+import { ResetPassword, ResetPasswordEmailRequest } from "../models/ResetPassword";
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnDestroy {
@@ -66,6 +67,16 @@ export class AuthenticationService implements OnDestroy {
         localStorage.removeItem('CurrentUser');
         this.currentUser = null;
         this.currentUserUpdated$.next(true);
+    }
+
+    public resetPassword(email: string, newPassword: string, token: string): Observable<ResetPassword | null> {
+        return this.httpClient.post<ResetPassword | null>(environment.baseUrl + 'ResetPassword',
+            ResetPassword.Create(email, newPassword, token),
+        );
+    }
+
+    public resetPasswordEmailRequest(email: ResetPasswordEmailRequest): Observable<ResetPasswordEmailRequest | null> {
+        return this.httpClient.post<ResetPasswordEmailRequest | null>(environment.baseUrl + 'ResetPasswordEmail', email);
     }
 
     ngOnDestroy(): void {

@@ -85,6 +85,10 @@ export class LoginComponent {
     });
   }
 
+  GoToResetPassword() {
+    this.router.navigate(['/resetpassword/email'])
+  }
+
   hide = signal(true);
   clickEvent(event: MouseEvent) {
     this.hide.set(!this.hide());

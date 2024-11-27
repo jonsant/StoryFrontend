@@ -70,9 +70,12 @@
     <button mat-icon-button aria-label="Menu icon" (click)="toggleMenu()">
         <mat-icon>menu</mat-icon>
     </button>
-    <h5>{{currentUser?.username}}</h5>
+    @if(currentUser !== null) {
+    <h5>{{currentUser.username}}</h5>
+
     <mat-icon (click)="GoToInvites()" [matBadge]="numberOfNewInvites > 0 ? numberOfNewInvites : null"
         matBadgeSize="small">notifications</mat-icon>
+    }
     }
 
     @if(!isMobile) {

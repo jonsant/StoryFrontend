@@ -10,6 +10,7 @@ import { authGuard } from './guards/auth/auth.guard';
 import { AdminComponent } from './admin/admin.component';
 import { adminGuard } from './guards/admin/admin.guard';
 import { SettingsComponent } from './settings/settings.component';
+import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 
 export const routes: Routes = [
     { path: 'signup', component: SignupComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [authGuard] },
     { path: 'create', component: CreateComponent, canActivate: [authGuard] },
     { path: 'story/:storyId', component: StoryComponent, canActivate: [authGuard] },
+    { path: 'resetpassword/:token', component: ResetpasswordComponent },
     { path: 'invites', component: InvitesComponent, canActivate: [authGuard] },
     { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
     { path: 'admin', component: AdminComponent, canActivate: [authGuard, adminGuard] },
