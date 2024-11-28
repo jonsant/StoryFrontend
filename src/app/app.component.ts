@@ -22,6 +22,12 @@ import { AuthenticationService } from './services/AuthenticationService';
 })
 export class AppComponent {
   title = 'StoryFrontend';
+  // title = 'StoryFrontend';
+  // title = 'StoryFrontend';
+  // title = 'StoryFrontend';
+  // title = 'StoryFrontend';
+  // title = 'StoryFrontend';
+  // title = 'StoryFrontend';
   userSignalRService$?: Subscription;
   newInvite$?: Subscription;
   userSignalRService = inject(UserSignalRService);
