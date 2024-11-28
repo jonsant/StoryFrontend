@@ -32,7 +32,6 @@ export class HomeComponent {
   storyService = inject(StoryService);
   authenticationService = inject(AuthenticationService);
   router = inject(Router);
-  forecasts?: Forecast[];
   stories: Story[] = [];
   participantStories: Story[] = [];
   displayedColumns: string[] = ['storyName'];
@@ -42,18 +41,7 @@ export class HomeComponent {
   // name = JSON.parse(sessionStorage.getItem("user")!).name;
 
   async ngOnInit() {
-    // this.forecasts = await lastValueFrom(this.storyService.GetForecasts());
     await this.GetStories();
-  }
-
-  async CreateForecast() {
-    const forecast = new Forecast();
-    forecast.Date = new Date();
-    forecast.Summary = "test från frontend";
-    forecast.TemperatureC = 1000;
-    forecast.WeatherForecastId = "potatis";
-    let response = await lastValueFrom(this.storyService.CreateForecast(forecast));
-    this.forecasts?.push(response);
   }
 
   async GetStories() {
