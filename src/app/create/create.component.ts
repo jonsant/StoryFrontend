@@ -76,7 +76,6 @@ export class CreateComponent {
     this.searchingUsers = false;
   }
 
-
   InviteInput() {
     if (this.createFormGroup.controls['inviteeInput'].value === "") return;
     this.searchingUsers = true;
