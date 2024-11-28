@@ -42,9 +42,6 @@ export class HomeComponent {
   // name = JSON.parse(sessionStorage.getItem("user")!).name;
 
   async ngOnInit() {
-    this.authenticationService.getWeather().subscribe(s => {
-      // console.log(s);
-    });
     // this.forecasts = await lastValueFrom(this.storyService.GetForecasts());
     await this.GetStories();
   }
