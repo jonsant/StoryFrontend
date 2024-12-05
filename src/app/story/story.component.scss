@@ -10,7 +10,8 @@
     // margin-bottom: 1rem;
 
     #top {
-        height: 100%;
+        // height: 100%;
+        height: calc(100% - 51px);
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
