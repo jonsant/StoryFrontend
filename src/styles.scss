@@ -6,8 +6,14 @@ body {
 }
 
 body {
+    .cdk-overlay-container {
+        z-index: 99999999999999;
+    }
+
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: Roboto,
+    "Helvetica Neue",
+    sans-serif;
 
 
     mat-form-field {

@@ -37,6 +37,9 @@ export class AdminComponent {
     if (response.email.toLowerCase() === this.emailWhiteListInput.toLowerCase()) {
       this._snackBar.open("Email added", "Close", { duration: 3000 });
     }
+    else if (response.email === 'exists') {
+      this._snackBar.open("Email is already whitelisted", "Close", { duration: 3000 });
+    }
     else {
       this._snackBar.open("Email couldn't be added", "Close", { duration: 3000 });
     }
