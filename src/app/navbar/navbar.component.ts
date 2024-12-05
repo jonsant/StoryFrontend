@@ -18,6 +18,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { InviteeService } from '../services/InviteeService';
 
+export interface TabLink {
+  title: string;
+  link: string;
+}
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -41,6 +46,7 @@ export class NavbarComponent {
   private readonly _destroying$ = new Subject<void>();
   router = inject(Router);
   authenticationService = inject(AuthenticationService);
+  activatedRoute = inject(ActivatedRoute);
 
   title = 'material-responsive-sidenav';
   @ViewChild(MatSidenav)
@@ -56,12 +62,24 @@ export class NavbarComponent {
   newInvite$?: Subscription;
   invitesService = inject(InviteeService);
   numberOfNewInvites: number = 0;
-  links = ['/home', '/invites', '/settings'];
+  // links = ['First', 'Second', 'Third'];
+  links: TabLink[] = [
+    // { title: 'Story', link: '/' },
+    { title: 'Stories', link: '/home' },
+    // { title: 'Joined', link: '/home/joined' },
+    { title: 'Invites', link: '/invites' },
+    { title: 'Settings', link: '/settings' },
+  ];
   activeLink = this.links[0];
 
   async ngOnInit() {
+
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
+      if (this.currentUser?.isAdmin) {
+        this.links.push({ title: 'Admin', link: '/admin' });
+      }
+      // this.activeLink = this.links.find(l => l.link.includes(activePath))!;
 
       this.newInvite$ = this.invitesService.GetNewInviteRecieved().subscribe(invite => {
         if (!this.router.url.includes('/invites')) this.numberOfNewInvites++;
@@ -75,6 +93,9 @@ export class NavbarComponent {
         else this.showCreateStoryBtn = true;
 
         if (val.url.startsWith('/invites')) this.numberOfNewInvites = 0;
+
+        // let activePath = this.router.url.split('/')[-1];
+        this.activeLink = this.links.find(l => l.link === this.router.url) ?? this.links[0];
       }
     });
 

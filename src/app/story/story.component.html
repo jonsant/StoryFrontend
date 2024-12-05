@@ -10,18 +10,24 @@
     <!-- CREATED ---------------------------------------------------------->
     @if (story.status === 'Created') {
     <div id="invitees">
-        <label>Players:</label>
+        <!-- <label>Players:</label> -->
         <mat-chip-set aria-label="Invitees">
-            <mat-chip-option [selectable]="false" id="creator-chip">👑{{story.creatorUsername}}</mat-chip-option>
+            <mat-chip-option [selectable]="false" id="creator-chip" [matTooltip]="'Story creator'"
+                #creatortooltip="matTooltip" (click)="creatortooltip.toggle();"
+                [matTooltipPosition]="'right'">👑{{story.creatorUsername}}</mat-chip-option>
             @for (invitee of story.invitees; track invitee) {
-            <mat-chip-option [selectable]="false" color="primary">{{invitee}}</mat-chip-option>
+            <mat-chip-option [selectable]="false" [matTooltip]="invitee + ' has yet to accept the invite'"
+                #invtooltip="matTooltip" (click)="invtooltip.toggle();" [matTooltipPosition]="'right'"
+                color="primary">{{invitee}}</mat-chip-option>
             }
         </mat-chip-set>
 
         <mat-chip-set aria-label="Participants">
             @for (participant of story.participants; track participant) {
             @if(participant !== currentUser.username) {
-            <mat-chip-option [selectable]="false" color="primary" selected>{{participant}}</mat-chip-option>
+            <mat-chip-option [selectable]="false" color="primary" selected
+                [matTooltip]="participant + ' has accepted the invite'" #partooltip="matTooltip"
+                (click)="partooltip.toggle();" [matTooltipPosition]="'right'">{{participant}}</mat-chip-option>
             }
             @else {
             <mat-chip-option [selectable]="false" color="primary" selected>You</mat-chip-option>
@@ -38,10 +44,11 @@
         @for(lobbyMessage of lobbyMessages; track $index) {
         <div class="lobby-message" [class.current-user-message]="lobbyMessage.userId === currentUser.userId"
             [class.other-user-message]="lobbyMessage.userId !== currentUser.userId">
-            <div class="username">{{lobbyMessage.userId === story.creatorUserId ? '👑' : ''}}{{lobbyMessage.username ===
-                currentUser.username ? 'You': lobbyMessage.username}}:
-            </div>
             <div class="message">{{lobbyMessage.message}}</div>
+            <div class="username">{{lobbyMessage.userId === story.creatorUserId ? '👑' : ''}}{{lobbyMessage.username
+                ===
+                currentUser.username ? 'You': lobbyMessage.username}}, {{lobbyMessage.created | date}}
+            </div>
         </div>
         }
     </div>
@@ -49,7 +56,10 @@
 
     <!-- Current player is creator and can start the story -->
     @if (story.status === 'Created' && story.creatorUserId === currentUser.userId) {
-    <button id="start-button" mat-flat-button color="primary" (click)="StartStory()">Start</button>
+    <div id="action-menu">
+        <button id="start-button" mat-flat-button color="primary" [disabled]="!story.participants ||
+    story.participants.length === 0" (click)="StartStory()">Start</button>
+    </div>
     }
 
     <!-- ACTIVE ---------------------------------------------------------->
@@ -80,7 +90,7 @@
 
 @if (story.status === 'Created') {
 <div id="btns">
-    <mat-form-field class="example-form-field">
+    <mat-form-field class="example-form-field" subscriptSizing="dynamic">
         <mat-label>Send message</mat-label>
         <input matInput type="text" [(ngModel)]="messageInputValue" (keydown.enter)="SendLobbyMessage()">
         <mat-icon matSuffix (click)="SendLobbyMessage()">send</mat-icon>
@@ -153,8 +163,9 @@
 <ng-template #finalStory>
     <div id="final-story">
         @if (story) {
+        <h2>Here's the final story:</h2>
         @for (entry of story.finalStoryEntries; track entry) {
-        <div #tooltip="matTooltip" (click)="tooltip.toggle(); finalEntryClicked = entry.text" id="final-entry"
+        <div #tooltip="matTooltip" (click)="tooltip.toggle(); finalEntryClicked = entry.text" class="final-entry"
             [matTooltip]="'Written by ' + entry.username" [matTooltipPosition]="'right'"
             [class.final-entry-focus]="finalEntryClicked === entry.text">
             {{entry.text}}

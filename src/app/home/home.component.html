@@ -22,7 +22,22 @@
 </mat-tab-group>
 
 <ng-template #participantStoriesList>
-    <div id="list-content">
+    <mat-list role="list">
+        @if (participantStories.length === 0) {
+        No stories
+        }
+        @for(story of participantStories; track $index) {
+        <div (click)="StoryClicked(story)">
+
+            <mat-list-item class="participant-story story">
+                <span matListItemTitle>{{story.storyName}}</span>
+                <span matListItemLine>{{story.creatorUsername}}</span>
+                <span matListItemMeta>{{story.created | date}}</span>
+            </mat-list-item>
+        </div>
+        }
+    </mat-list>
+    <!-- <div id="list-content">
         @if (participantStories.length === 0) {
         <div id="empty">
             No stories
@@ -34,9 +49,6 @@
                 <span>
                     {{story.storyName}}
                 </span>
-                <!-- <span>
-                        {{story}}
-                    </span> -->
             </div>
             <div class="story-right">
                 <span>
@@ -46,53 +58,45 @@
             </div>
         </div>
         }
-        <!-- <mat-table [dataSource]="filteredStories" class="mat-elevation-z8"> -->
-        <!--      
-        <ng-container matColumnDef="storyName">
-            <mat-header-cell *matHeaderCellDef> Story </mat-header-cell>
-            <mat-cell *matCellDef="let story"> {{story.storyName}} </mat-cell>
-        </ng-container>
-        
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="StoryClicked(row)"></mat-row>
-    </mat-table> -->
-    </div>
+    </div> -->
 </ng-template>
 
 <ng-template #ownedStories>
-    <div id="list-content">
+    <mat-list role="list">
         @if (stories.length === 0) {
-        <div id="empty">
-            No stories
-        </div>
+        No stories
         }
         @for(story of stories; track $index) {
-        <div class="story" (click)="StoryClicked(story)">
-            <div class="story-left">
-                <span>
-                    {{story.storyName}}
-                </span>
-                <!-- <span>
-                        {{story}}
-                    </span> -->
-            </div>
-            <div class="story-right">
-                <span>
-                    {{story.created| date}}
-                </span>
-                <mat-icon>arrow_forward_ios</mat-icon>
-            </div>
+        <div (click)="StoryClicked(story)">
+            <mat-list-item>
+                <span matListItemTitle>{{story.storyName}}</span>
+                <span matListItemMeta>{{story.created | date}}</span>
+            </mat-list-item>
         </div>
         }
-        <!-- <mat-table [dataSource]="filteredStories" class="mat-elevation-z8"> -->
-        <!--      
-        <ng-container matColumnDef="storyName">
-            <mat-header-cell *matHeaderCellDef> Story </mat-header-cell>
-            <mat-cell *matCellDef="let story"> {{story.storyName}} </mat-cell>
-        </ng-container>
-        
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="StoryClicked(row)"></mat-row>
-    </mat-table> -->
-    </div>
+    </mat-list>
+
+    <!-- <div id=" list-content">
+            @if (stories.length === 0) {
+            <div id="empty">
+                No stories
+            </div>
+            }
+            @for(story of stories; track $index) {
+            <div class="story" (click)="StoryClicked(story)">
+                <div class="story-left">
+                    <span>
+                        {{story.storyName}}
+                    </span>
+
+                </div>
+                <div class="story-right">
+                    <span>
+                        {{story.created| date}}
+                    </span>
+                    <mat-icon>arrow_forward_ios</mat-icon>
+                </div>
+            </div>
+            }
+        </div> -->
 </ng-template>

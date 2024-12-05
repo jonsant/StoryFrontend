@@ -5,13 +5,15 @@ import { firstValueFrom, Subscribable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-invites',
   standalone: true,
   imports: [
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    MatListModule
   ],
   templateUrl: './invites.component.html',
   styleUrl: './invites.component.scss'

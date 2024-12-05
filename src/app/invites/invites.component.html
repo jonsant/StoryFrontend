@@ -2,25 +2,36 @@
     @if (invites.length === 0) {
     <label>No invitations</label>
     }
-    @for(invitee of invites; track $index) {
-    <div class="invite">
-        <div class="invite-left">
-            <span>
-                <b>{{invitee.storyName}}</b>
+    <mat-list>
+
+        @for(invitee of invites; track $index) {
+        <mat-list-item>
+            <span matListItemTitle>{{invitee.storyName}}</span>
+            <span matListItemLine>{{invitee.creatorUsername}}</span>
+            <span matListItemMeta>{{invitee.invitedDate | date}}</span>
+            <span matListItemAvatar>
+                <mat-icon (click)="AcceptInvite(invitee.inviteeId)">add</mat-icon>
             </span>
-            <span>
-                {{invitee.creatorUsername}}
-            </span>
-        </div>
-        <div class="invite-middle">
-            <span>
-                {{invitee.invitedDate | date}}
-            </span>
-        </div>
-        <div class="invite-right">
-            <mat-icon (click)="AcceptInvite(invitee.inviteeId)">add</mat-icon>
-            <!-- <mat-icon (click)="AcceptInvite(invitee.inviteeId)">remove</mat-icon> -->
-        </div>
-    </div>
-    }
+
+        </mat-list-item>
+        <!-- <div class="invite">
+                <div class="invite-left">
+                    <span>
+                        <b>{{invitee.storyName}}</b>
+                    </span>
+                    <span>
+                        {{invitee.creatorUsername}}
+                    </span>
+                </div>
+                <div class="invite-middle">
+                    <span>
+                        {{invitee.invitedDate | date}}
+                    </span>
+                </div>
+                <div class="invite-right">
+                    <mat-icon (click)="AcceptInvite(invitee.inviteeId)">add</mat-icon>
+                </div>
+            </div> -->
+        }
+    </mat-list>
 </div>

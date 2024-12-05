@@ -1,14 +1,18 @@
 @if(isMobile) {
-<router-outlet></router-outlet>
+<div id="mobile-content">
+    <router-outlet></router-outlet>
+</div>
 
-<!-- <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
     @for (link of links; track link) {
-    <a mat-tab-link [routerLink]="link" (click)="activeLink = link" [active]="activeLink == link"> Stories </a>
+    <a mat-tab-link (click)="activeLink = link" [routerLink]="link.link" [active]="activeLink == link"> {{link.title}}
+    </a>
     }
+    <!-- <a mat-tab-link disabled>Disabled Link</a> -->
 </nav>
-<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel> -->
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
-<mat-sidenav-container autosize>
+<!-- <mat-sidenav-container autosize>
     <mat-sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="isMobile ? 'false' : 'true'">
         <mat-nav-list>
             <a mat-list-item (click)="GoHome()">
@@ -61,15 +65,15 @@
     <mat-sidenav-content>
         <router-outlet></router-outlet>
     </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container> -->
 
 }
 
 <mat-toolbar [class.mobile-toolbar]="isMobile">
     @if (isMobile) {
-    <button mat-icon-button aria-label="Menu icon" (click)="toggleMenu()">
+    <!-- <button mat-icon-button aria-label="Menu icon" (click)="toggleMenu()">
         <mat-icon>menu</mat-icon>
-    </button>
+    </button> -->
     @if(currentUser !== null) {
     <h5>{{currentUser.username}}</h5>
 

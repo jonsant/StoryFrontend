@@ -7,6 +7,24 @@
         >label {
             align-self: center;
         }
+
+        mat-list {
+            overflow-y: auto;
+            // max-height: calc(100% - 68px);
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+
+            mat-list-item {
+                // background-color: #42b883;
+                background-color: white;
+                height: 4rem;
+                margin-bottom: 0.5rem;
+                border-radius: 1rem;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+                mat-icon {}
+            }
+        }
     }
 
     .invite {

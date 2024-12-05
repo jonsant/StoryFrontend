@@ -25,14 +25,30 @@
         display: flex;
         flex-direction: column;
         // gap: 1rem;
-        margin-top: 1rem;
+        // margin-top: 1rem;
         // margin-left: 1rem;
         // margin-right: 1rem;
         // background-color: red;
         height: 100%;
 
-        #list-content {
+        mat-list {
             overflow-y: auto;
+            // max-height: calc(100% - 68px);
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+
+            mat-list-item {
+                // background-color: #42b883;
+                background-color: white;
+                height: 4rem;
+                margin-bottom: 0.5rem;
+                border-radius: 1rem;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            }
+        }
+
+        #list-content {
+            // overflow-y: auto;
             padding-left: 0.5rem;
             padding-right: 0.5rem;
             display: flex;
@@ -50,11 +66,11 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem;
-        background-color: #D8EFD3;
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-        border-radius: 0.5rem;
+        // gap: 1rem;
+        // padding: 1rem;
+        // background-color: #D8EFD3;
+        // box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        // border-radius: 0.5rem;
 
         &:hover {
             cursor: pointer;
@@ -77,6 +93,6 @@
     }
 
     .participant-story {
-        background-color: rgb(122, 122, 208);
+        // background-color: rgb(122, 122, 208);
     }
 }

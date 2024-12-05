@@ -1,19 +1,32 @@
 :host {
-    height: calc(100dvh - 56px);
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    // gap: 1rem;
     width: 100%;
-    overflow: auto;
+    // overflow: auto;
     // margin-left: 1rem;
     // margin-right: 1rem;
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
 
     #top {
         height: 100%;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem
+        gap: 0.5rem;
+
+        #invitees {
+            display: flex;
+            flex-direction: row;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: 1rem;
+
+            max-height: 6rem;
+            overflow-y: auto;
+        }
     }
 
     #title-and-back {
@@ -51,27 +64,28 @@
     #chat {
         display: flex;
         flex-direction: column;
-        border: 1px solid rgb(191, 191, 191);
-        border-radius: 0.5rem;
+        border-top: 1px solid rgb(191, 191, 191);
+        // border-radius: 0.5rem;
         height: 100%;
-        max-height: 300px;
+        // max-height: 300px;
         overflow: auto;
-        padding: 1rem;
+        padding-top: 1rem;
         gap: 1rem;
-
-        .current-user-message {
-            background-color: rgba(175, 175, 235, 0.84);
-            margin-left: auto;
-        }
-
-        .other-user-message {
-            background-color: rgba(94, 197, 94, 0.548);
-        }
+        padding-right: 0.6rem;
+        padding-left: 0.6rem;
 
         .lobby-message {
-            padding: 0.2rem 1rem 0.2rem 0.5rem;
-            border-radius: 0.5rem;
+            padding: 0.5rem;
+            // border-radius: 0.5rem;
+            --r: 1.5rem;
+            /* the radius */
+            --t: 0.5rem;
+            /* the size of the tail */
+            border-radius: calc(var(--r) + var(--t))/var(--r);
+
+            font-size: 1rem;
             width: fit-content;
+
 
             .username {
                 color: rgb(95, 95, 95);
@@ -82,6 +96,28 @@
                 padding-left: 0.5rem;
             }
         }
+
+        .current-user-message {
+            background-color: rgba(175, 175, 235, 0.84);
+            margin-left: auto;
+            --_p: 100%;
+            border-bottom-right-radius: 0 0;
+            place-self: end;
+        }
+
+        .other-user-message {
+            background-color: rgba(94, 197, 94, 0.548);
+            padding-left: 1rem !important;
+            --_p: 0;
+            border-bottom-left-radius: 0 0;
+            place-self: start;
+        }
+    }
+
+    #action-menu {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
     }
 
     #btns {
@@ -97,9 +133,10 @@
     }
 
     .entry {
-        width: 100%;
         display: flex;
         flex-direction: column;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
     #waiting-for-turn {
@@ -124,19 +161,19 @@
     #final-story {
         display: flex;
         flex-direction: column;
-        border: 1px solid rgb(191, 191, 191);
         border-radius: 0.5rem;
         height: 100%;
-        max-height: 300px;
         overflow: auto;
         padding: 1rem;
         gap: 0.2rem;
-        background-color: rgb(192, 192, 232);
+        font-size: 1rem;
 
-        #final-entry {
-            padding: 0.2rem 1rem 0.2rem 0.5rem;
+        .final-entry {
+            padding: 0.5rem 1rem 0.5rem 1rem;
             border-radius: 0.5rem;
             width: fit-content;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
 
             &:hover {
                 cursor: pointer;
