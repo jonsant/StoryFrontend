@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from '../services/UserService';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -39,6 +40,7 @@ export class SettingsComponent {
   userService = inject(UserService);
   usernameAvailable?: boolean;
   private _snackBar = inject(MatSnackBar);
+  router = inject(Router);
 
   ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
@@ -89,5 +91,10 @@ export class SettingsComponent {
     }
 
     this.changingUsername = false;
+  }
+
+  Logout() {
+    this.authenticationService.logout();
+    this.router.navigate(['login']);
   }
 }
