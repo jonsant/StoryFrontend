@@ -20,6 +20,7 @@ import { MatListModule } from '@angular/material/list';
 })
 export class InvitesComponent {
   inviteeService = inject(InviteeService);
+  storyService = inject(StoryService);
   invites: Invitee[] = [];
   newInvites$?: Subscription;
   router = inject(Router);
@@ -38,7 +39,8 @@ export class InvitesComponent {
     acceptInvite.inviteeId = inviteeId;
     let response = await firstValueFrom(this.inviteeService.AcceptInvite(acceptInvite));
     if (response !== null) {
-      this.router.navigate(['/story/' + response.storyId])
+      await this.storyService.SetCurrentStoryId(response.storyId);
+      this.router.navigate(['/story']);
     }
     // await this.GetInvites();
   }
