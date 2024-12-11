@@ -39,7 +39,7 @@ export class InvitesComponent {
     let acceptInvite: AcceptInvite = new AcceptInvite();
     acceptInvite.inviteeId = inviteeId;
     let response = await firstValueFrom(this.inviteeService.AcceptInvite(acceptInvite));
-    if (response !== null) {
+    if (response !== null && response.storyId) {
       await this.storyService.SetCurrentStoryId(response.storyId);
       this.router.navigate(['/story']);
     }
