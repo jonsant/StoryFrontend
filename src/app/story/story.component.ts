@@ -68,9 +68,12 @@ export class StoryComponent {
   @ViewChild('chat') private chatContainer?: ElementRef;
 
   async ngOnInit() {
-    this.currentStoryId = this.route.snapshot.paramMap.get('storyId');
+    // this.currentStoryId = this.route.snapshot.paramMap.get('storyId');
     if (this.currentStoryId === null) this.currentStoryId = this.sessionStorageService.GetCurrentStoryId();
-    if (this.currentStoryId === null) this.router.navigate(['home']);
+    if (this.currentStoryId === null) {
+      this.router.navigate(['home']);
+      return;
+    }
 
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
@@ -140,7 +143,8 @@ export class StoryComponent {
     }
   }
 
-  BackButtonClicked() {
+  async BackButtonClicked() {
+    await this.storyService.SetCurrentStoryId(null);
     this.router.navigate(['/home']);
   }
 

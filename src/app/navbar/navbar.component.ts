@@ -17,9 +17,11 @@ import { UserSignalRService } from '../services/UserSignalRService';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { InviteeService } from '../services/InviteeService';
+import { StoryService } from '../services/StoryService';
 
 export interface TabLink {
   title: string;
+  icon: string;
   link: string;
 }
 
@@ -47,6 +49,8 @@ export class NavbarComponent {
   router = inject(Router);
   authenticationService = inject(AuthenticationService);
   activatedRoute = inject(ActivatedRoute);
+  storyService = inject(StoryService);
+  currentStoryId: string | null = null;
 
   title = 'material-responsive-sidenav';
   @ViewChild(MatSidenav)
@@ -62,13 +66,17 @@ export class NavbarComponent {
   newInvite$?: Subscription;
   invitesService = inject(InviteeService);
   numberOfNewInvites: number = 0;
-  // links = ['First', 'Second', 'Third'];
+  // links: TabLink[] = [
+  //   { title: 'Story', link: '/story' },
+  //   { title: 'Stories', link: '/home' },
+  //   { title: 'Invites', link: '/invites' },
+  //   { title: 'Settings', link: '/settings' },
+  // ];
   links: TabLink[] = [
-    // { title: 'Story', link: '/' },
-    { title: 'Stories', link: '/home' },
-    // { title: 'Joined', link: '/home/joined' },
-    { title: 'Invites', link: '/invites' },
-    { title: 'Settings', link: '/settings' },
+    { title: 'Current', icon: 'history_edu', link: '/story' },
+    { title: 'Stories', icon: 'list', link: '/home' },
+    { title: 'Invites', icon: 'person_add', link: '/invites' },
+    { title: 'Settings', icon: 'settings', link: '/settings' },
   ];
   activeLink = this.links[0];
 
@@ -77,22 +85,29 @@ export class NavbarComponent {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
       if (this.currentUser?.isAdmin) {
-        this.links.push({ title: 'Admin', link: '/admin' });
+        this.links.push({ title: 'Admin', link: '/admin', icon: 'settings' });
       }
-      // this.activeLink = this.links.find(l => l.link.includes(activePath))!;
 
       this.newInvite$ = this.invitesService.GetNewInviteRecieved().subscribe(invite => {
         if (!this.router.url.includes('/invites')) this.numberOfNewInvites++;
       });
     });
 
+    this.storyService.GetCurrentStoryIdUpdated$().subscribe(id => {
+      this.currentStoryId = id;
+    });
+
     this.routeChanges$ = this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
-        if (val.url.startsWith('/story/') ||
+        if (val.url.startsWith('/story') ||
           val.url.startsWith('/create')) this.showCreateStoryBtn = false;
         else this.showCreateStoryBtn = true;
 
         if (val.url.startsWith('/invites')) this.numberOfNewInvites = 0;
+
+        if (val.url.startsWith('/story') && this.links.findIndex(l => l.link === '/story') < 0) {
+          // this.links = [{ icon: 'history_edu', link: '/story' }, ...this.links];
+        }
 
         // let activePath = this.router.url.split('/')[-1];
         this.activeLink = this.links.find(l => l.link === this.router.url) ?? this.links[0];

@@ -11,7 +11,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { AuthInterceptor } from './interceptors/AuthInterceptor';
-import { FlagBasedReuseStrategy } from './CustomRouteReuseStrategy';
+import { CacheRouteReuseStrategy } from './CustomRouteReuseStrategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +23,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideRouter(routes),
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    // { provide: RouteReuseStrategy, useClass: FlagBasedReuseStrategy }
+    { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy }
   ]
 };

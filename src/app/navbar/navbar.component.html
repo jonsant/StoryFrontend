@@ -3,14 +3,25 @@
     <router-outlet></router-outlet>
 </div>
 
+@if (currentUser !== null) {
+
 <nav mat-tab-nav-bar [tabPanel]="tabPanel">
     @for (link of links; track link) {
-    <a mat-tab-link (click)="activeLink = link" [routerLink]="link.link" [active]="activeLink == link"> {{link.title}}
+    <!-- @if (link.link === '/story' && currentStoryId === null) {} -->
+    <!-- @else { -->
+    <a mat-tab-link (click)="activeLink = link" [routerLink]="link.link" [active]="activeLink == link"
+        [disabled]="link.link === '/story' && currentStoryId === null">
+        <div class="tab-item-content">
+            <mat-icon>{{link.icon}}</mat-icon>
+            <span>{{link.title}}</span>
+        </div>
     </a>
+    <!-- } -->
     }
     <!-- <a mat-tab-link disabled>Disabled Link</a> -->
 </nav>
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+}
 
 <!-- <mat-sidenav-container autosize>
     <mat-sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="isMobile ? 'false' : 'true'">

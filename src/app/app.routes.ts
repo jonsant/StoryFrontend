@@ -18,7 +18,7 @@ export const routes: Routes = [
     { path: 'login-failed', component: LoginFailedComponent },
     { path: 'home', component: HomeComponent, canActivate: [authGuard] },
     { path: 'create', component: CreateComponent, canActivate: [authGuard] },
-    { path: 'story/:storyId', component: StoryComponent, canActivate: [authGuard] },
+    { path: 'story', component: StoryComponent, canActivate: [authGuard] },
     { path: 'resetpassword/:token', component: ResetpasswordComponent },
     { path: 'invites', component: InvitesComponent, canActivate: [authGuard] },
     { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },

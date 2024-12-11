@@ -56,7 +56,7 @@ export class HomeComponent {
   async StoryClicked(row: any) {
     let story = row as Story;
     if (!story.storyId) return;
-    sessionStorage.setItem("currentStoryId", story.storyId);
-    this.router.navigate(['story', story.storyId]);
+    await this.storyService.SetCurrentStoryId(story.storyId);
+    this.router.navigate(['story']);
   }
 }

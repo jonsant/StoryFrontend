@@ -99,7 +99,8 @@ export class CreateComponent {
     this.story.invitees = inv;
     let response = await lastValueFrom(this.storyService.CreateStory(this.story));
     if (response.storyId && response.storyId !== '') {
-      this.router.navigate(['/home']);
+      await this.storyService.SetCurrentStoryId(response.storyId);
+      this.router.navigate(['/story']);
     }
   }
 

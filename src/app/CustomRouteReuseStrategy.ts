@@ -1,33 +1,47 @@
-import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from "@angular/router";
+import { RouteReuseStrategy } from '@angular/router/';
+import { ActivatedRouteSnapshot, DetachedRouteHandle } from '@angular/router';
+export class CacheRouteReuseStrategy implements RouteReuseStrategy {
+    storedRouteHandles = new Map<string, DetachedRouteHandle>();
+    allowRetriveCache: any = {
+        'home': true
+    };
 
-export class FlagBasedReuseStrategy implements RouteReuseStrategy {
-    private readonly storage = new Map<string, DetachedRouteHandle>();
-
-    shouldDetach(route: ActivatedRouteSnapshot): boolean {
-        return route.routeConfig?.data?.['reusable'];
-    }
-
-    store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle | null) {
-        const routeComponentName = route.routeConfig?.component?.name;
-        if (routeComponentName && handle)
-            this.storage.set(routeComponentName, handle);
-    }
-
-    shouldAttach(route: ActivatedRouteSnapshot): boolean {
-        return this.storage.has(route.routeConfig?.component?.name ?? '')
+    shouldReuseRoute(before: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+        // debugger;
+        // console.log("before: ", before.url);
+        // console.log("curr: ", curr.url);
+        if (this.getPath(before) === 'home' && this.getPath(curr) !== 'home') { // before = to, curr = from
+            this.allowRetriveCache['home'] = true;
+        } else {
+            this.allowRetriveCache['home'] = false;
+        } return before.routeConfig === curr.routeConfig;
     }
 
     retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
-        return this.storage.get(route.routeConfig?.component?.name ?? '') ?? null
+        return this.storedRouteHandles.get(this.getPath(route)) as DetachedRouteHandle;
     }
 
-    shouldReuseRoute(
-        future: ActivatedRouteSnapshot,
-        curr: ActivatedRouteSnapshot,
-    ): boolean {
-        return (
-            future.routeConfig === curr.routeConfig ||
-            future.routeConfig?.data?.['reusable']
-        );
+    shouldAttach(route: ActivatedRouteSnapshot): boolean {
+        const path = this.getPath(route);
+        if (this.allowRetriveCache[path]) {
+            return this.storedRouteHandles.has(this.getPath(route));
+        }
+
+        return false;
+    }
+
+    shouldDetach(route: ActivatedRouteSnapshot): boolean {
+        const path = this.getPath(route);
+        if (this.allowRetriveCache.hasOwnProperty(path)) {
+            return true;
+        } return false;
+    }
+
+    store(route: ActivatedRouteSnapshot, detachedTree: DetachedRouteHandle): void {
+        this.storedRouteHandles.set(this.getPath(route), detachedTree);
+    } private getPath(route: ActivatedRouteSnapshot): string {
+        if (route.routeConfig !== null && route.routeConfig.path !== null) {
+            return route.routeConfig.path!;
+        } return '';
     }
 }
