@@ -100,6 +100,7 @@ export class CreateComponent {
     let response = await lastValueFrom(this.storyService.CreateStory(this.story));
     if (response.storyId && response.storyId !== '') {
       await this.storyService.SetCurrentStoryId(response.storyId);
+      this.storyService.SetStoryWasCreated(response);
       this.router.navigate(['/story']);
     }
   }

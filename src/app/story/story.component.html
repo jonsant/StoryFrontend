@@ -47,7 +47,7 @@
             <div class="message">{{lobbyMessage.message}}</div>
             <div class="username">{{lobbyMessage.userId === story.creatorUserId ? '👑' : ''}}{{lobbyMessage.username
                 ===
-                currentUser.username ? 'You': lobbyMessage.username}}, {{lobbyMessage.created | date}}
+                currentUser.username ? 'You': lobbyMessage.username}}, {{lobbyMessage.created | date : "dd MMM HH:mm"}}
             </div>
         </div>
         }

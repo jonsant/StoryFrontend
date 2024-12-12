@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Forecast } from "../models/Forecast";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 import { StartStory, Story } from "../models/Story";
 import { CreateEntry } from "../models/StoryEntry";
@@ -11,6 +11,8 @@ import { SessionStorageService } from "./SessionStorageService";
 export class StoryService {
     baseUrl: string = environment.baseUrl;
     private currentStoryId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+    private storyWasCreated$: Subject<Story> = new Subject<Story>();
+    // private storyWasJoined$: Subject<
     private sessionStorageService = inject(SessionStorageService);
     constructor(private httpClient: HttpClient) {
         const curStor = this.sessionStorageService.GetCurrentStoryId();
@@ -65,5 +67,13 @@ export class StoryService {
 
     GetCurrentStoryIdUpdated$(): Observable<string | null> {
         return this.currentStoryId$.asObservable();
+    }
+
+    SetStoryWasCreated(story: Story) {
+        this.storyWasCreated$.next(story);
+    }
+
+    GetStoryWasCreated$(): Observable<Story> {
+        return this.storyWasCreated$.asObservable();
     }
 }

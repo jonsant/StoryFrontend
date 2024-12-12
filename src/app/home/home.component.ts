@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { StoryService } from '../services/StoryService';
 import { Forecast } from '../models/Forecast';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { CommonModule, DatePipe, JsonPipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { Story } from '../models/Story';
@@ -40,10 +40,14 @@ export class HomeComponent {
   filteredStories: Story[] = [];
   showMyStories: boolean = true;
   loadingStories: boolean = true;
+  storyWasCreated$?: Subscription;
   // name = JSON.parse(sessionStorage.getItem("user")!).name;
 
   async ngOnInit() {
     await this.GetStories();
+    this.storyWasCreated$ = this.storyService.GetStoryWasCreated$().subscribe(story => {
+      this.stories = [story, ...this.stories];
+    });
   }
 
   async GetStories() {
@@ -58,5 +62,10 @@ export class HomeComponent {
     if (!story.storyId) return;
     await this.storyService.SetCurrentStoryId(story.storyId);
     this.router.navigate(['story']);
+  }
+
+  ngOnDestroy() {
+    // console.log("sldfkjlsdfkjsldkfjslkdfjlsdkfjsldkfjsldkfjsldkfjldskjflskdjf");
+    this.storyWasCreated$ && this.storyWasCreated$.unsubscribe();
   }
 }
