@@ -152,6 +152,7 @@ export class StoryComponent {
     if (this.currentStoryId === null) return;
     let response = await lastValueFrom(this.storyService.GetStoryById(this.currentStoryId));
     this.story = response;
+
   }
 
   async GetLobbyMessages() {

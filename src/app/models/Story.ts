@@ -10,6 +10,7 @@ export class Story {
     status?: string;
     currentPlayerInOrder?: string;
     currentPlayerId?: string;
+    currentPlayerUsername?: string;
     finalStory?: string;
     invitees?: string[];
     participants?: string[];

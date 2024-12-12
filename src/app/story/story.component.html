@@ -15,6 +15,7 @@
             <mat-chip-option [selectable]="false" id="creator-chip" [matTooltip]="'Story creator'"
                 #creatortooltip="matTooltip" (click)="creatortooltip.toggle();"
                 [matTooltipPosition]="'right'">👑{{story.creatorUsername}}</mat-chip-option>
+
             @for (invitee of story.invitees; track invitee) {
             <mat-chip-option [selectable]="false" [matTooltip]="invitee + ' has yet to accept the invite'"
                 #invtooltip="matTooltip" (click)="invtooltip.toggle();" [matTooltipPosition]="'right'"
@@ -24,12 +25,12 @@
 
         <mat-chip-set aria-label="Participants">
             @for (participant of story.participants; track participant) {
-            @if(participant !== currentUser.username) {
+            @if(participant !== currentUser.username && participant !== story.creatorUsername) {
             <mat-chip-option [selectable]="false" color="primary" selected
                 [matTooltip]="participant + ' has accepted the invite'" #partooltip="matTooltip"
                 (click)="partooltip.toggle();" [matTooltipPosition]="'right'">{{participant}}</mat-chip-option>
             }
-            @else {
+            @if (participant === currentUser.username && story.creatorUsername !== currentUser.username) {
             <mat-chip-option [selectable]="false" color="primary" selected>You</mat-chip-option>
             }
             }
@@ -157,6 +158,22 @@
 <ng-template #waitforturn>
     <div id="waiting-for-turn">
         <h2>Waiting for your turn...</h2>
+        <!-- <p>Current player is {{story?.currentPlayerUsername}}</p> -->
+        <div>
+            @for(participant of story!.participants; track $index) {
+            <div id="player">
+
+                <mat-chip-option [selectable]="false" color="primary" [selected]="participant
+            ===
+            story?.currentPlayerUsername">{{participant}}</mat-chip-option>
+                @if(participant
+                ===
+                story?.currentPlayerUsername) {
+                <span>(current player)</span>
+                }
+            </div>
+            }
+        </div>
     </div>
 </ng-template>
 

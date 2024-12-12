@@ -147,6 +147,19 @@
         justify-content: center;
         align-items: center;
         height: 100%;
+
+        >div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            >div {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+                align-items: center;
+            }
+        }
     }
 
     button {
