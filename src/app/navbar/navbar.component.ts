@@ -110,7 +110,7 @@ export class NavbarComponent {
         }
 
         // let activePath = this.router.url.split('/')[-1];
-        this.activeLink = this.links.find(l => l.link === this.router.url) ?? this.links[0];
+        this.activeLink = this.links.find(l => this.router.url.includes(l.link)) ?? this.links[0];
       }
     });
 

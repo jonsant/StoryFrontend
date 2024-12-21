@@ -12,10 +12,11 @@ export class StoryService {
     baseUrl: string = environment.baseUrl;
     private currentStoryId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
     private storyWasCreated$: Subject<Story> = new Subject<Story>();
+    private readonly CURRENT_STORY_ITEM_NAME: string = "currentStoryId";
     // private storyWasJoined$: Subject<
     private sessionStorageService = inject(SessionStorageService);
     constructor(private httpClient: HttpClient) {
-        const curStor = this.sessionStorageService.GetCurrentStoryId();
+        const curStor = localStorage.getItem(this.CURRENT_STORY_ITEM_NAME);
         this.currentStoryId$.next(curStor);
     }
 
@@ -57,12 +58,16 @@ export class StoryService {
 
     SetCurrentStoryId(storyId: string | null) {
         if (storyId === null) {
-            sessionStorage.removeItem("currentStoryId");
+            localStorage.removeItem(this.CURRENT_STORY_ITEM_NAME);
         }
         if (storyId !== null) {
-            sessionStorage.setItem("currentStoryId", storyId);
+            localStorage.setItem(this.CURRENT_STORY_ITEM_NAME, storyId);
         }
         this.currentStoryId$.next(storyId);
+    }
+
+    GetSavedCurrentStoryId() {
+        return localStorage.getItem(this.CURRENT_STORY_ITEM_NAME);
     }
 
     GetCurrentStoryIdUpdated$(): Observable<string | null> {

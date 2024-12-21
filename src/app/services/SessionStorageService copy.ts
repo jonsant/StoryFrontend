@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
-export class SessionStorageService {
+export class LocalStorageService {
 
-    // public GetCurrentStoryId(): string | null {
+    // public Get(): string | null {
     //     return sessionStorage.getItem('currentStoryId');
     // }
 }

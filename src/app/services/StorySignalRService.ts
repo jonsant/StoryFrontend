@@ -3,10 +3,10 @@ import * as signalR from '@microsoft/signalr';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './AuthenticationService';
-import { SessionStorageService } from './SessionStorageService';
 import { GetUser } from '../models/User';
 import { LobbyMessage } from '../models/LobbyMessage';
 import { Story } from '../models/Story';
+import { StoryService } from './StoryService';
 
 @Injectable({
     providedIn: 'root',
@@ -14,13 +14,13 @@ import { Story } from '../models/Story';
 export class StoryLobbySignalRService {
     private hubConnection?: signalR.HubConnection;
     authService = inject(AuthenticationService);
-    sessionStorageService = inject(SessionStorageService);
+    storyService = inject(StoryService);
 
     constructor() {
     }
 
     startConnection(currentStoryId: string): Observable<void> {
-        let currentStory = this.sessionStorageService.GetCurrentStoryId() ?? "";
+        let currentStory = this.storyService.GetSavedCurrentStoryId() ?? "";
         let t = this.authService.getCurrentUser()?.token ?? "";
         this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(environment.baseUrl + 'storyhub/' + currentStoryId, { accessTokenFactory: () => t })

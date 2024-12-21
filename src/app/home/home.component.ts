@@ -38,12 +38,16 @@ export class HomeComponent {
   participantStories: Story[] = [];
   displayedColumns: string[] = ['storyName'];
   filteredStories: Story[] = [];
-  showMyStories: boolean = true;
+  // showMyStories: boolean = true;
   loadingStories: boolean = true;
   storyWasCreated$?: Subscription;
-  // name = JSON.parse(sessionStorage.getItem("user")!).name;
+  selectedTabIndex: number = 0;
 
   async ngOnInit() {
+    // this.SetUrl();
+    if (window.location.href.includes("part=true")) {
+      this.selectedTabIndex = 1;
+    }
     await this.GetStories();
     this.storyWasCreated$ = this.storyService.GetStoryWasCreated$().subscribe(story => {
       this.stories = [story, ...this.stories];
@@ -64,8 +68,22 @@ export class HomeComponent {
     this.router.navigate(['story']);
   }
 
+  TabChanged() {
+    // this.showMyStories = !this.showMyStories;
+    this.SetUrl();
+  }
+
+  SetUrl() {
+    console.log(this.selectedTabIndex);
+    if (this.selectedTabIndex === 1) {
+      window.location.href += "?part=true";
+    }
+    else {
+      window.location.href = window.location.href.replace("?part=true", "");
+    }
+  }
+
   ngOnDestroy() {
-    // console.log("sldfkjlsdfkjsldkfjslkdfjlsdkfjsldkfjsldkfjsldkfjldskjflskdjf");
     this.storyWasCreated$ && this.storyWasCreated$.unsubscribe();
   }
 }

@@ -16,7 +16,6 @@ import { CurrentUser } from '../models/User';
 import { AuthenticationService } from '../services/AuthenticationService';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoryLobbySignalRService } from '../services/StorySignalRService';
-import { SessionStorageService } from '../services/SessionStorageService';
 import { CommonModule } from '@angular/common';
 import { CreateEntry } from '../models/StoryEntry';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -53,7 +52,6 @@ export class StoryComponent {
   lobbyMessageService = inject(LobbyMessageService);
   userService = inject(UserService);
   authenticationService = inject(AuthenticationService);
-  sessionStorageService = inject(SessionStorageService);
   currentUser: CurrentUser | null = null;
   currentUserUpdated$?: Subscription;
   storyHubSignalRConnection$?: Subscription;
@@ -69,7 +67,7 @@ export class StoryComponent {
 
   async ngOnInit() {
     // this.currentStoryId = this.route.snapshot.paramMap.get('storyId');
-    if (this.currentStoryId === null) this.currentStoryId = this.sessionStorageService.GetCurrentStoryId();
+    if (this.currentStoryId === null) this.currentStoryId = this.storyService.GetSavedCurrentStoryId();
     if (this.currentStoryId === null) {
       this.router.navigate(['home']);
       return;
