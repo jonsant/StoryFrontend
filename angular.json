@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "StoryFrontend": {
+    "storyfrontend-pwa": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "StoryFrontend:build:production"
+              "buildTarget": "storyfrontend-pwa:build:production"
             },
             "development": {
-              "buildTarget": "StoryFrontend:build:development"
+              "buildTarget": "storyfrontend-pwa:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "StoryFrontend:build"
+            "buildTarget": "storyfrontend-pwa:build"
           }
         },
         "test": {
