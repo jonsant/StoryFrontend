@@ -16,6 +16,7 @@ const setEnv = () => {
     storyApiUri: 'https://storybackend.azurewebsites.net/',
     redirectUri: 'https://jonsant.github.io/StoryFrontend/',
     testvar: '${process.env.TESTVAR}'
+    vapidKey: '${process.env.VAPIDKEY}'
   };
   `;
     console.log('The file `environment.ts` will be written with the following content:\n');

@@ -13,6 +13,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from '../services/UserService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { PushNotificationService } from '../services/PushNotificationService';
 
 @Component({
   selector: 'app-settings',
@@ -25,7 +27,8 @@ import { Router } from '@angular/router';
     FormsModule,
     NgxDebounceInputDirective,
     MatInputModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
@@ -41,11 +44,39 @@ export class SettingsComponent {
   usernameAvailable?: boolean;
   private _snackBar = inject(MatSnackBar);
   router = inject(Router);
+  pushNotificationService = inject(PushNotificationService);
+  allowPushNotifications: boolean = false;
+  allowPushNotificationsUpdated$?: Subscription;
+  allowingPushNotifications: boolean = false;
 
   ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
     });
+    this.allowPushNotifications = this.pushNotificationService.GetAllowPushNotifications();
+    this.allowPushNotificationsUpdated$ = this.pushNotificationService.GetAllowPushNotificationsUpdated$().subscribe(val => {
+      this.allowPushNotifications = val;
+      this.allowingPushNotifications = false;
+      if (this.allowPushNotifications) {
+        this._snackBar.open("Notifications were turned on", "Close", { duration: 3000 });
+      }
+    });
+  }
+
+  UnSub() {
+    this.pushNotificationService.UnsubscribeFromPushNotifications();
+  }
+
+  AllowPushNotificationChanged() {
+    console.log(this.allowPushNotifications);
+    if (this.allowPushNotifications) {
+      this._snackBar.open("Notifications are already on", "Close", { duration: 3000 });
+      return;
+    }
+    else {
+      this.allowingPushNotifications = true;
+      this.pushNotificationService.SetupFirebase();
+    }
   }
 
   UsernameInput() {
@@ -96,5 +127,9 @@ export class SettingsComponent {
   Logout() {
     this.authenticationService.logout();
     this.router.navigate(['login']);
+  }
+
+  ngOnDestroy() {
+    this.allowPushNotificationsUpdated$ && this.allowPushNotificationsUpdated$.unsubscribe();
   }
 }

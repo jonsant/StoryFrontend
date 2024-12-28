@@ -1,28 +1,53 @@
 <h3>{{currentUser?.email}}</h3>
-<h4><b>Username:</b> {{currentUser?.username}}</h4>
 
-<mat-form-field class="example-form-field">
-    <mat-label>Change username</mat-label>
-    <input matInput type="text" [disabled]="changingUsername" [(ngModel)]="usernameInput" (input)="UsernameInput()"
-        (keydown.enter)="CheckUsernameAvailable()" ngxDebounceInput [debounceTime]="2000"
-        (search)="CheckUsernameAvailable()">
-    @if (usernameAvailable !== undefined && usernameAvailable === false) {
-    <!-- <mat-error>Username already taken</mat-error> -->
-    <mat-hint align="start">Username is already taken</mat-hint>
-    }
-    @if (usernameInput === currentUser?.username) {
-    <mat-hint align="start">Username is already yours!</mat-hint>
-    }
-    @if(searchingUsername || changingUsername) {
-    <mat-spinner id="spinner" matSuffix [diameter]="20"></mat-spinner>
-    }
-    @if (usernameAvailable) {
-    <mat-hint align="start">Username is available!</mat-hint>
-    }
-</mat-form-field>
-<button mat-flat-button aria-label="New story" (click)="ChangeUsername()" [disabled]="!usernameAvailable"
-    color="primary">Change username
-    <mat-icon>save</mat-icon>
-</button>
+<body>
+    <div id="username">
+        <h4><b>Username:</b> {{currentUser?.username}}</h4>
 
-<button mat-flat-button aria-label="Log out" (click)="Logout()"><mat-icon>logout</mat-icon>Log out</button>
+        <mat-form-field class="example-form-field">
+            <mat-label>Change username</mat-label>
+            <input matInput type="text" [disabled]="changingUsername" [(ngModel)]="usernameInput"
+                (input)="UsernameInput()" (keydown.enter)="CheckUsernameAvailable()" ngxDebounceInput
+                [debounceTime]="2000" (search)="CheckUsernameAvailable()">
+            @if (usernameAvailable !== undefined && usernameAvailable === false) {
+            <!-- <mat-error>Username already taken</mat-error> -->
+            <mat-hint align="start">Username is already taken</mat-hint>
+            }
+            @if (usernameInput === currentUser?.username) {
+            <mat-hint align="start">Username is already yours!</mat-hint>
+            }
+            @if(searchingUsername || changingUsername) {
+            <mat-spinner id="spinner" matSuffix [diameter]="20"></mat-spinner>
+            }
+            @if (usernameAvailable) {
+            <mat-hint align="start">Username is available!</mat-hint>
+            }
+        </mat-form-field>
+        <button mat-flat-button aria-label="New story" (click)="ChangeUsername()" [disabled]="!usernameAvailable"
+            color="primary">Change username
+            <mat-icon>save</mat-icon>
+        </button>
+    </div>
+
+    <!-- <mat-slide-toggle [(ngModel)]="allowPushNotifications" (ngModelChange)="AllowPushNotificationChanged()">Allow
+        notifications:
+        {{allowPushNotifications ? 'On': 'Off'}}</mat-slide-toggle> -->
+
+    <div id="push">
+        <div>
+            <button mat-flat-button color="primary" (click)="AllowPushNotificationChanged()"
+                [disabled]="allowPushNotifications || allowingPushNotifications"><mat-icon>notifications</mat-icon>Allow
+                push notifications
+            </button>
+            @if(allowingPushNotifications) {
+            <mat-spinner [diameter]="20"></mat-spinner>
+            }
+        </div>
+        @if (allowPushNotifications) {
+        <span>To disable: Remove permissions via browser settings</span>
+        }
+    </div>
+    <!-- <button mat-flat-button (click)="UnSub()">UnSub</button> -->
+
+    <button mat-flat-button aria-label="Log out" (click)="Logout()"><mat-icon>logout</mat-icon>Log out</button>
+</body>

@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { environment } from './src/environments/environment';
 
 const firebaseConfig = {
     "projectId": "storyfrontend-pwa",
@@ -19,7 +20,7 @@ navigator.serviceWorker.getRegistration("./ngsw-worker.js")
     .then((registration) => {
         getToken(messaging,
             {
-                vapidKey: 'BMLd14n3kl1RlvbtvRhUol3f6yON0Bx1dGhOgmWa52h_NK4tNa6HeKmjkoq2C3Ub4NClBBQBzw6w2P0wRhcJgB8',
+                vapidKey: environment.vapidKey,
                 serviceWorkerRegistration: registration
             }).then((currentToken) => {
                 if (currentToken) {
