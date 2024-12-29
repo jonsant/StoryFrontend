@@ -7,6 +7,7 @@ import { Register, RegisterResponse } from "../models/Register";
 import { CurrentUser } from "../models/User";
 import { Login, LoginResponse } from "../models/Login";
 import { ResetPassword, ResetPasswordEmailRequest } from "../models/ResetPassword";
+import { PushNotificationService } from "./PushNotificationService";
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnDestroy {
@@ -15,6 +16,7 @@ export class AuthenticationService implements OnDestroy {
     private forecastTestUrl = "GetForecastBackendTest";
     private httpClient = inject(HttpClient);
     private currentUser: CurrentUser | null = null;
+    private pushNotificationService = inject(PushNotificationService);
     private currentUserUpdated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     public register(user: Register): Observable<RegisterResponse> {
@@ -63,7 +65,8 @@ export class AuthenticationService implements OnDestroy {
         return this.currentUserUpdated$.asObservable();
     }
 
-    public logout() {
+    public async logout() {
+        await this.pushNotificationService.UnsubscribeFromPushNotifications();
         localStorage.removeItem('CurrentUser');
         this.currentUser = null;
         this.currentUserUpdated$.next(true);

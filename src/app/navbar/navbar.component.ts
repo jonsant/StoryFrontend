@@ -174,8 +174,8 @@ export class NavbarComponent {
     this.router.navigate(['/login']);
   }
 
-  Logout() {
-    this.authenticationService.logout();
+  async Logout() {
+    await this.authenticationService.logout();
     this.router.navigate(['login']);
   }
 

@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { firstValueFrom, Observable, Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 import { AcceptInvite, Invitee } from "../models/Invitee";
-import { AddUserPushNotificationToken } from "../models/PushNotification";
+import { AddUserPushNotificationToken, DeleteUserPushNotificationToken } from "../models/PushNotification";
 import { deleteToken, getToken, Messaging } from "@angular/fire/messaging";
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +17,10 @@ export class PushNotificationService {
 
     AddUserPushNotificationToken(addUserPushNotificationToken: AddUserPushNotificationToken): Observable<AddUserPushNotificationToken> {
         return this.httpClient.post<AddUserPushNotificationToken>(this.baseUrl + "AddUserPushNotificationToken", addUserPushNotificationToken);
+    }
+
+    DeletePushNotificationToken(token: string): Observable<DeleteUserPushNotificationToken> {
+        return this.httpClient.delete<DeleteUserPushNotificationToken>(this.baseUrl + "DeleteUserPushNotificationToken/" + token);
     }
 
     GetAllowPushNotifications(): boolean {
@@ -34,28 +38,48 @@ export class PushNotificationService {
     }
 
     async UnsubscribeFromPushNotifications() {
-        navigator.serviceWorker.getRegistration("./ngsw-worker.js")
-            .then(async (registration) => {
-                console.log(this.messaging);
-                if (!registration) return;
+        const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
+        if (!registration) return;
 
-                getToken(this.messaging!,
-                    {
-                        vapidKey: environment.vapidKey,
-                        serviceWorkerRegistration: registration
-                    }).then(async (currentToken) => {
-                        if (currentToken) {
-                            console.log("currentToken to delete: ", currentToken);
-                            return;
-                        }
-                        // Show UI permission request dialog
-                        console.log('No registration token available. Request permission to generate one.');
-                        // this.SetAllowPushNotificationsUpdated(false);
+        const currentToken = await getToken(this.messaging!,
+            {
+                vapidKey: environment.vapidKey,
+                serviceWorkerRegistration: registration
+            });
+            console.log(currentToken)
+            if (currentToken)
+            {
+                console.log("currentToken to delete: ", currentToken);
+                let response = await firstValueFrom(this.DeletePushNotificationToken(currentToken));
+                console.log(response);
+                return;
+            }
+            console.log("No current token to delete");
 
-                    }).catch((err) => {
-                        console.log('An error occurred retrieving the token. ', err);
-                        // this.SetAllowPushNotificationsUpdated(false);
-                    });
+            // .then(async (registration) => {
+            //     console.log(this.messaging);
+            //     if (!registration) return;
+
+            //     getToken(this.messaging!,
+            //         {
+            //             vapidKey: environment.vapidKey,
+            //             serviceWorkerRegistration: registration
+            //         }).then(async (currentToken) => {
+            //             if (currentToken) {
+            //                 console.log("currentToken to delete: ", currentToken);
+            //                 let response = await firstValueFrom(this.DeletePushNotificationToken(currentToken));
+            //                 console.log(response);
+            //                 return;
+            //             }
+            //             // Show UI permission request dialog
+            //             console.log('No registration token available. Request permission to generate one.');
+            //             // this.SetAllowPushNotificationsUpdated(false);
+
+            //         }).catch((err) => {
+            //             console.log('An error occurred retrieving the token. ', err);
+            //             // this.SetAllowPushNotificationsUpdated(false);
+            //         });
+
 
                 // return;
 
@@ -84,7 +108,7 @@ export class PushNotificationService {
                 //         }
                 //     });
                 // });
-            });
+            // });
 
     }
 

@@ -7,3 +7,7 @@ export class AddUserPushNotificationToken {
         return addUserPushNotificationToken;
     }
 }
+
+export class DeleteUserPushNotificationToken {
+    token: string = "";
+}
