@@ -38,36 +38,52 @@ export class PushNotificationService {
             .then(async (registration) => {
                 console.log(this.messaging);
                 if (!registration) return;
-                return;
-                deleteToken(this.messaging!).then(async () => {
-                    console.log("token was deleted");
-                    // return;
-                    const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
-                    if (!registration) return;
-                    console.log("registration: ", registration);
 
-                    const subscription = await registration.pushManager.getSubscription();
-                    console.log("subscription: ", subscription);
-                    if (!subscription) return;
-
-                    const unsubscribed = await subscription.unsubscribe().then(unsubed => {
-                        if (unsubed) {
-                            console.log("unsubed!!");
-                            // this.SetAllowPushNotificationsUpdated(false);
-
-                            registration.unregister().then(function (registered) {
-                                console.log("unregistered: ", registered);
-                            });
+                getToken(this.messaging!,
+                    {
+                        vapidKey: environment.vapidKey,
+                        serviceWorkerRegistration: registration
+                    }).then(async (currentToken) => {
+                        if (currentToken) {
+                            console.log("currentToken to delete: ", currentToken);
+                            return;
                         }
-                        else {
-                            console.log("not unsubed!!");
-                        }
+                        // Show UI permission request dialog
+                        console.log('No registration token available. Request permission to generate one.');
+                        // this.SetAllowPushNotificationsUpdated(false);
+
+                    }).catch((err) => {
+                        console.log('An error occurred retrieving the token. ', err);
+                        // this.SetAllowPushNotificationsUpdated(false);
                     });
-                });
-                // Remove token from backend server
-                // console.log("could not delete token");
-                // const response = await firstValueFrom(this.AddUserPushNotificationToken(AddUserPushNotificationToken.Create(currentToken)));
-                // console.log("delete token response: ", response);
+
+                // return;
+
+                // deleteToken(this.messaging!).then(async () => {
+                //     console.log("token was deleted");
+                //     // return;
+                //     const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
+                //     if (!registration) return;
+                //     console.log("registration: ", registration);
+
+                //     const subscription = await registration.pushManager.getSubscription();
+                //     console.log("subscription: ", subscription);
+                //     if (!subscription) return;
+
+                //     const unsubscribed = await subscription.unsubscribe().then(unsubed => {
+                //         if (unsubed) {
+                //             console.log("unsubed!!");
+                //             // this.SetAllowPushNotificationsUpdated(false);
+
+                //             registration.unregister().then(function (registered) {
+                //                 console.log("unregistered: ", registered);
+                //             });
+                //         }
+                //         else {
+                //             console.log("not unsubed!!");
+                //         }
+                //     });
+                // });
             });
 
     }
