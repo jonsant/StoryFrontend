@@ -15,8 +15,17 @@ const setEnv = () => {
     baseUrl: 'https://storybackend.azurewebsites.net/',
     storyApiUri: 'https://storybackend.azurewebsites.net/',
     redirectUri: 'https://jonsant.github.io/StoryFrontend/',
-    testvar: '${process.env.TESTVAR}'
-    vapidKey: '${process.env.VAPIDKEY}'
+    testvar: '${process.env.TESTVAR}',
+    vapidKey: '${process.env.VAPIDKEY}',
+    firebaseConfig: {
+        "projectId": "storyfrontend-pwa",
+        "appId": "1:582938887093:web:d05ac52729d89f6a774ffc",
+        "storageBucket": "storyfrontend-pwa.firebasestorage.app",
+        "apiKey": "AIzaSyAoyYKjh2Mvr2BZ9PlVASMfz4k0Pffxr9I",
+        "authDomain": "storyfrontend-pwa.firebaseapp.com",
+        "messagingSenderId": "582938887093",
+        "measurementId": "G-1621V7KCKC"
+    }
   };
   `;
     console.log('The file `environment.ts` will be written with the following content:\n');
