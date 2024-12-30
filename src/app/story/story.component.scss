@@ -4,14 +4,14 @@
     flex-direction: column;
     // gap: 1rem;
     width: 100%;
-    // overflow: auto;
+    overflow: auto;
     // margin-left: 1rem;
     // margin-right: 1rem;
     // margin-bottom: 1rem;
 
     #top {
-        // height: 100%;
         height: calc(100% - 51px);
+        // overflow-y: auto;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -193,6 +193,12 @@
             &:hover {
                 cursor: pointer;
                 background-color: rgb(175, 175, 207);
+            }
+
+            .author {
+                color: gray;
+                text-align: right;
+                font-size: smaller;
             }
         }
 

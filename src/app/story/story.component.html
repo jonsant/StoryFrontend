@@ -59,7 +59,7 @@
     @if (story.status === 'Created' && story.creatorUserId === currentUser.userId) {
     <div id="action-menu">
         <button id="start-button" mat-flat-button color="primary" [disabled]="!story.participants ||
-    story.participants.length === 0" (click)="StartStory()">Start</button>
+    story.participants.length < 2" (click)="StartStory()">Start</button>
     </div>
     }
 
@@ -182,10 +182,13 @@
         @if (story) {
         <h2>Here's the final story:</h2>
         @for (entry of story.finalStoryEntries; track entry) {
-        <div #tooltip="matTooltip" (click)="tooltip.toggle(); finalEntryClicked = entry.text" class="final-entry"
-            [matTooltip]="'Written by ' + entry.username" [matTooltipPosition]="'right'"
-            [class.final-entry-focus]="finalEntryClicked === entry.text">
-            {{entry.text}}
+        <div class="final-entry">
+            <div clsas="content">
+                {{entry.text}}
+            </div>
+            <div class="author">
+                author: {{entry.username}}
+            </div>
         </div>
         }
         }
