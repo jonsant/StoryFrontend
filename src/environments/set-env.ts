@@ -12,8 +12,8 @@ const setEnv = () => {
     const envConfigFile = `export const environment = {
     appVersion: '${appVersion}',
     production: true,
-    baseUrl: 'https://localhost:7162/',
-    storyApiUri: 'https://localhost:7162/',
+    baseUrl: 'https://storybackend.azurewebsites.net/',
+    storyApiUri: 'https://storybackend.azurewebsites.net/',
     redirectUri: 'https://jonsant.github.io/StoryFrontend/',
     testvar: '${process.env.TESTVAR}'
     vapidKey: '${process.env.VAPIDKEY}'

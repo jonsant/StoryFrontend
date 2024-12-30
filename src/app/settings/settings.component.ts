@@ -49,11 +49,13 @@ export class SettingsComponent {
   allowPushNotificationsUpdated$?: Subscription;
   allowingPushNotifications: boolean = false;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
     });
-    this.allowPushNotifications = this.pushNotificationService.GetAllowPushNotifications();
+    if (Notification.permission === 'granted') {
+      this.allowPushNotifications = await this.pushNotificationService.GetAllowPushNotificationsEnabled();
+    }
     this.allowPushNotificationsUpdated$ = this.pushNotificationService.GetAllowPushNotificationsUpdated$().subscribe(val => {
       this.allowPushNotifications = val;
       this.allowingPushNotifications = false;
@@ -63,19 +65,14 @@ export class SettingsComponent {
     });
   }
 
-  UnSub() {
-    this.pushNotificationService.UnsubscribeFromPushNotifications();
-  }
-
-  AllowPushNotificationChanged() {
-    console.log(this.allowPushNotifications);
-    if (this.allowPushNotifications) {
-      this._snackBar.open("Notifications are already on", "Close", { duration: 3000 });
-      return;
+  async TogglePushNotifications() {
+    if (!this.allowPushNotifications) {
+      this.allowingPushNotifications = true;
+      this.pushNotificationService.TogglePushNotifications(true);
     }
     else {
       this.allowingPushNotifications = true;
-      this.pushNotificationService.SetupFirebase();
+      this.pushNotificationService.TogglePushNotifications(false);
     }
   }
 
@@ -124,8 +121,8 @@ export class SettingsComponent {
     this.changingUsername = false;
   }
 
-  Logout() {
-    this.authenticationService.logout();
+  async Logout() {
+    await this.authenticationService.logout();
     this.router.navigate(['login']);
   }
 

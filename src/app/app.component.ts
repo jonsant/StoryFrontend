@@ -36,9 +36,6 @@ export class AppComponent {
   pushNotificationService = inject(PushNotificationService);
 
   ngOnInit(): void {
-    // this.subscribeToPushNotifications();
-    // this.requestPermissionToPush();
-
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
       if (this.currentUser === null) return;
@@ -50,30 +47,6 @@ export class AppComponent {
       });
     });
   }
-
-  // subscribeToPushNotifications() {
-  //   this.swPush.messages.subscribe(res => {
-  //     console.log(res);
-  //   });
-  // }
-
-  // async requestPermissionToPush() {
-  //   const messaging = getMessaging();
-  //   try {
-  //     const permission = await Notification.requestPermission();
-  //     if (permission !== 'granted') {
-  //       console.log("Permission granted");
-  //       const token = await getToken(messaging, { vapidKey: 'BMLd14n3kl1RlvbtvRhUol3f6yON0Bx1dGhOgmWa52h_NK4tNa6HeKmjkoq2C3Ub4NClBBQBzw6w2P0wRhcJgB8' });
-  //       console.log(token);
-  //       // Send token to server and associate with user
-  //     }
-  //     else {
-  //       console.log("Permission denied");
-  //     }
-  //   } catch (error) {
-  //     console.log("Unable to get permission to notify.", error);
-  //   }
-  // }
 
   ngOnDestroy(): void {
     this.userSignalRService.stopConnection();

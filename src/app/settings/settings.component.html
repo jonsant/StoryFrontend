@@ -29,25 +29,16 @@
         </button>
     </div>
 
-    <!-- <mat-slide-toggle [(ngModel)]="allowPushNotifications" (ngModelChange)="AllowPushNotificationChanged()">Allow
-        notifications:
-        {{allowPushNotifications ? 'On': 'Off'}}</mat-slide-toggle> -->
-
     <div id="push">
         <div>
-            <button mat-flat-button color="primary" (click)="AllowPushNotificationChanged()"
-                [disabled]="allowPushNotifications || allowingPushNotifications"><mat-icon>notifications</mat-icon>Allow
-                push notifications
-            </button>
+            <mat-slide-toggle [ngModel]="allowPushNotifications" (ngModelChange)="TogglePushNotifications()"
+                [disabled]="allowingPushNotifications">Push notifications are
+                {{allowPushNotifications ? 'enabled' : 'disabled'}}</mat-slide-toggle>
             @if(allowingPushNotifications) {
             <mat-spinner [diameter]="20"></mat-spinner>
             }
         </div>
-        @if (allowPushNotifications) {
-        <span>To disable: Remove permissions via browser settings</span>
-        }
     </div>
-    <button mat-flat-button (click)="UnSub()">UnSub</button>
 
     <button mat-flat-button aria-label="Log out" (click)="Logout()"><mat-icon>logout</mat-icon>Log out</button>
 </body>

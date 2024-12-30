@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { firstValueFrom, Observable, Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 import { AcceptInvite, Invitee } from "../models/Invitee";
-import { AddUserPushNotificationToken, DeleteUserPushNotificationToken } from "../models/PushNotification";
+import { AddUserPushNotificationToken, DeleteUserPushNotificationToken, GetUserPushNotificationToken, ToggleUserPushNotificationToken } from "../models/PushNotification";
 import { deleteToken, getToken, Messaging } from "@angular/fire/messaging";
 
 @Injectable({ providedIn: 'root' })
@@ -23,10 +23,27 @@ export class PushNotificationService {
         return this.httpClient.delete<DeleteUserPushNotificationToken>(this.baseUrl + "DeleteUserPushNotificationToken/" + token);
     }
 
-    GetAllowPushNotifications(): boolean {
-        // const allow = localStorage.getItem("allowPushNotifications");
-        // return allow === null ? false : allow as unknown as boolean;
-        return Notification.permission === 'granted';
+    async GetAllowPushNotificationsEnabled(): Promise<boolean> {
+        const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
+        if (!registration) return false;
+
+        const currentToken = await getToken(this.messaging!,
+            {
+                vapidKey: environment.vapidKey,
+                serviceWorkerRegistration: registration
+            });
+        if (currentToken) {
+            let response = await firstValueFrom(this.GetAllowPushNotifications(currentToken));
+            if (!response || response == null) return false;
+            return response.enabled;
+        }
+        else {
+            return false;
+        }
+    }
+
+    GetAllowPushNotifications(token: string): Observable<GetUserPushNotificationToken> {
+        return this.httpClient.get<GetUserPushNotificationToken>(this.baseUrl + "GetUserPushNotificationToken/" + token);
     }
 
     GetAllowPushNotificationsUpdated$() {
@@ -46,80 +63,51 @@ export class PushNotificationService {
                 vapidKey: environment.vapidKey,
                 serviceWorkerRegistration: registration
             });
-            console.log(currentToken)
-            if (currentToken)
-            {
-                console.log("currentToken to delete: ", currentToken);
-                let response = await firstValueFrom(this.DeletePushNotificationToken(currentToken));
-                console.log(response);
-                return;
-            }
+        if (currentToken) {
+            let response = await firstValueFrom(this.DeletePushNotificationToken(currentToken));
+        }
+        else {
             console.log("No current token to delete");
+        }
+    }
 
-            // .then(async (registration) => {
-            //     console.log(this.messaging);
-            //     if (!registration) return;
+    async TogglePushNotifications(enabled: boolean) {
+        if (Notification.permission !== 'granted') {
+            this.SetupFirebase();
+            return;
+        }
+        const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
+        if (!registration) return;
 
-            //     getToken(this.messaging!,
-            //         {
-            //             vapidKey: environment.vapidKey,
-            //             serviceWorkerRegistration: registration
-            //         }).then(async (currentToken) => {
-            //             if (currentToken) {
-            //                 console.log("currentToken to delete: ", currentToken);
-            //                 let response = await firstValueFrom(this.DeletePushNotificationToken(currentToken));
-            //                 console.log(response);
-            //                 return;
-            //             }
-            //             // Show UI permission request dialog
-            //             console.log('No registration token available. Request permission to generate one.');
-            //             // this.SetAllowPushNotificationsUpdated(false);
+        const currentToken = await getToken(this.messaging!,
+            {
+                vapidKey: environment.vapidKey,
+                serviceWorkerRegistration: registration
+            });
+        if (currentToken) {
+            let response = await firstValueFrom(this.TogglePushNotification(currentToken, enabled));
+            if (response && response !== null) {
+                this.SetAllowPushNotificationsUpdated(response.enabled);
+            }
+            else {
+                await this.SetupFirebase();
+            }
+        }
+        else {
+            console.log("No current token to toggle");
+        }
+    }
 
-            //         }).catch((err) => {
-            //             console.log('An error occurred retrieving the token. ', err);
-            //             // this.SetAllowPushNotificationsUpdated(false);
-            //         });
-
-
-                // return;
-
-                // deleteToken(this.messaging!).then(async () => {
-                //     console.log("token was deleted");
-                //     // return;
-                //     const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
-                //     if (!registration) return;
-                //     console.log("registration: ", registration);
-
-                //     const subscription = await registration.pushManager.getSubscription();
-                //     console.log("subscription: ", subscription);
-                //     if (!subscription) return;
-
-                //     const unsubscribed = await subscription.unsubscribe().then(unsubed => {
-                //         if (unsubed) {
-                //             console.log("unsubed!!");
-                //             // this.SetAllowPushNotificationsUpdated(false);
-
-                //             registration.unregister().then(function (registered) {
-                //                 console.log("unregistered: ", registered);
-                //             });
-                //         }
-                //         else {
-                //             console.log("not unsubed!!");
-                //         }
-                //     });
-                // });
-            // });
-
+    TogglePushNotification(token: string, enabled: boolean): Observable<ToggleUserPushNotificationToken> {
+        return this.httpClient.put<ToggleUserPushNotificationToken>(this.baseUrl + "ToggleUserPushNotificationToken", ToggleUserPushNotificationToken.Create(token, enabled));
     }
 
     SetupFirebase() {
         // Get service worker registration
         navigator.serviceWorker.getRegistration("./ngsw-worker.js")
             .then(async (registration) => {
-                console.log("got registration: ", registration);
                 const permission = await Notification.requestPermission();
                 if (permission !== 'granted') {
-                    console.log("Permission not granted!");
                     this.SetAllowPushNotificationsUpdated(false);
                     return;
                 }
@@ -130,9 +118,7 @@ export class PushNotificationService {
                     }).then(async (currentToken) => {
                         if (currentToken) {
                             // Send token to server and associate with user, and update UI if necessary
-                            console.log("currentToken for push notifications: ", currentToken);
                             const response = await firstValueFrom(this.AddUserPushNotificationToken(AddUserPushNotificationToken.Create(currentToken)));
-                            console.log("response: ", response);
                             let subscription = await registration!.pushManager.getSubscription();
                             if (!subscription) {
                                 subscription = await registration!.pushManager.subscribe({
@@ -144,7 +130,7 @@ export class PushNotificationService {
                             return;
                         }
                         // Show UI permission request dialog
-                        console.log('No registration token available. Request permission to generate one.');
+                        console.log("No registration token available. Do permission request to generate one.");
                         this.SetAllowPushNotificationsUpdated(false);
 
                     }).catch((err) => {
