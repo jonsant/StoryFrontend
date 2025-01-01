@@ -55,6 +55,15 @@ body {
                     >a {
 
                         padding: 0rem;
+                        // width: 5px;
+
+                        >.mdc-tab-indicator {
+                            // width: 5px;
+                        }
+                    }
+
+                    >.mdc-tab {
+                        min-width: 60px;
                     }
                 }
             }
