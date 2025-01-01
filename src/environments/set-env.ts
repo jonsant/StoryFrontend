@@ -16,7 +16,7 @@ const setEnv = () => {
     storyApiUri: 'https://storybackend.azurewebsites.net/',
     redirectUri: 'https://jonsant.github.io/StoryFrontend/',
     testvar: '${process.env.TESTVAR}',
-    vapidKey: '${process.env.VAPIDKEY}',
+    vapidkey: '${process.env.VAPIDKEY}',
     firebaseConfig: {
         "projectId": "storyfrontend-pwa",
         "appId": "1:582938887093:web:d05ac52729d89f6a774ffc",

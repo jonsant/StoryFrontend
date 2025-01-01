@@ -29,7 +29,7 @@ export class PushNotificationService {
 
         const currentToken = await getToken(this.messaging!,
             {
-                vapidKey: environment.vapidKey,
+                vapidKey: environment.vapidkey,
                 serviceWorkerRegistration: registration
             });
         if (currentToken) {
@@ -60,7 +60,7 @@ export class PushNotificationService {
 
         const currentToken = await getToken(this.messaging!,
             {
-                vapidKey: environment.vapidKey,
+                vapidKey: environment.vapidkey,
                 serviceWorkerRegistration: registration
             });
         if (currentToken) {
@@ -81,7 +81,7 @@ export class PushNotificationService {
 
         const currentToken = await getToken(this.messaging!,
             {
-                vapidKey: environment.vapidKey,
+                vapidKey: environment.vapidkey,
                 serviceWorkerRegistration: registration
             });
         if (currentToken) {
@@ -113,7 +113,7 @@ export class PushNotificationService {
                 }
                 getToken(this.messaging!,
                     {
-                        vapidKey: environment.vapidKey,
+                        vapidKey: environment.vapidkey,
                         serviceWorkerRegistration: registration
                     }).then(async (currentToken) => {
                         if (currentToken) {
@@ -123,7 +123,7 @@ export class PushNotificationService {
                             if (!subscription) {
                                 subscription = await registration!.pushManager.subscribe({
                                     userVisibleOnly: true,
-                                    applicationServerKey: environment.vapidKey
+                                    applicationServerKey: environment.vapidkey
                                 });
                             }
                             this.SetAllowPushNotificationsUpdated(true);

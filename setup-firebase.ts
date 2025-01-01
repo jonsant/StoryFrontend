@@ -20,7 +20,7 @@ navigator.serviceWorker.getRegistration("./ngsw-worker.js")
     .then((registration) => {
         getToken(messaging,
             {
-                vapidKey: environment.vapidKey,
+                vapidKey: environment.vapidkey,
                 serviceWorkerRegistration: registration
             }).then((currentToken) => {
                 if (currentToken) {
