@@ -36,6 +36,7 @@ const setEnv = () => {
         } else {
             console.log(envConfigFile);
             console.log(`Angular environment.ts file generated correctly at ${targetPath} \n`);
+            console.log(`testvar: ${process.env.TESTVAR}`);
         }
     });
 };
