@@ -34,7 +34,6 @@ const setEnv = () => {
             console.error(err);
             throw err;
         } else {
-            console.log(envConfigFile);
             console.log(`Angular environment.ts file generated correctly at ${targetPath} \n`);
         }
     });
