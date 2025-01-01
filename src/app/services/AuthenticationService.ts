@@ -66,7 +66,9 @@ export class AuthenticationService implements OnDestroy {
     }
 
     public async logout() {
-        await this.pushNotificationService.UnsubscribeFromPushNotifications();
+        if (Notification.permission === 'granted') {
+            await this.pushNotificationService.UnsubscribeFromPushNotifications();
+        }
         localStorage.removeItem('CurrentUser');
         localStorage.removeItem('CurrentStoryId');
         this.currentUser = null;
