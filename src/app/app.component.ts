@@ -25,7 +25,7 @@ import { AddUserPushNotificationToken } from './models/PushNotification';
   ]
 })
 export class AppComponent {
-  title = 'StoryFrontend';
+  title = 'GroupWriter';
   userSignalRService$?: Subscription;
   newInvite$?: Subscription;
   userSignalRService = inject(UserSignalRService);
@@ -34,8 +34,29 @@ export class AppComponent {
   currentUserUpdated$?: Subscription;
   authenticationService = inject(AuthenticationService);
   pushNotificationService = inject(PushNotificationService);
+  pushNotificationListener$?: Subscription;
 
   ngOnInit(): void {
+    this.pushNotificationService.ListenForPushNotifications();
+  //   self.addEventListener("push", (event => {
+  //     const data = event.data.json() // Payload from the server, assumed to be in JSON format
+
+  // event.waitUntil(
+  //   // Upon receiving the push event, call **Notifications API** to push the notification
+  //   self.registration.showNotification(
+  //     data.title ? data.title : "New Message",
+  //     {
+  //       body: data.body,
+  //       badge: "images/badge_icon.png",
+  //       vibrate: [200, 100, 200],
+  //       timestamp: Date.now(),
+  //       data: { use_to_open_specific_page: data.props }, // Custom data sent from the server
+  //     }
+  //   )
+  // )
+  //   }));
+    
+
     this.currentUserUpdated$ = this.authenticationService.getCurrentUserUpdated$().subscribe(v => {
       this.currentUser = this.authenticationService.getCurrentUser();
       if (this.currentUser === null) return;

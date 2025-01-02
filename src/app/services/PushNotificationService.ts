@@ -4,15 +4,48 @@ import { firstValueFrom, Observable, Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 import { AcceptInvite, Invitee } from "../models/Invitee";
 import { AddUserPushNotificationToken, DeleteUserPushNotificationToken, GetUserPushNotificationToken, ToggleUserPushNotificationToken } from "../models/PushNotification";
-import { deleteToken, getToken, Messaging } from "@angular/fire/messaging";
+import { deleteToken, getToken, Messaging, onMessage } from "@angular/fire/messaging";
+import { SwPush } from "@angular/service-worker";
 
 @Injectable({ providedIn: 'root' })
 export class PushNotificationService {
     baseUrl: string = environment.baseUrl;
+    swPush = inject(SwPush);
     private readonly messaging = inject(Messaging, { optional: true });
     private allowPushNotificationsUpdated$: Subject<boolean> = new Subject<boolean>();
 
     constructor(private httpClient: HttpClient) {
+    }
+
+    async ListenForPushNotifications(): Promise<void> {
+        const registration = await navigator.serviceWorker.getRegistration("./ngsw-worker.js");
+        if (!registration || !this.swPush.isEnabled) return;
+
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            // const data = event.data.data.json();
+            console.log("event ", event);
+        });
+
+        // console.log("enabled: ", this.messaging);
+        // onMessage(this.messaging!, (msg) => {
+        //     console.log("msggg", msg);
+        // });
+
+        // onBackgroundMessage(this.messaging!, (msg) => {
+
+        // });
+        
+
+        // this.swPush.subscription.subscribe(sub => {
+        //     console.log("suuuub", sub);
+            
+        //     this.swPush.messages.subscribe(msg => {
+        //       console.log("msgggg", msg);
+        //       console.log("messaging: ", this.messaging);
+        //     //   this.messaging!.onBackgroundMessageHandler = (m) => {};
+        //       registration.showNotification("test", msg);
+        //     });
+        //   });
     }
 
     AddUserPushNotificationToken(addUserPushNotificationToken: AddUserPushNotificationToken): Observable<AddUserPushNotificationToken> {
