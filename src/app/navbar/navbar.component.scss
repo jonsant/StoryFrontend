@@ -82,9 +82,10 @@ mat-sidenav-content,
   // justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 5rem;
+  padding-top: 64px;
   max-width: 1024px;
-  height: 100%;
+  height: calc(100% - 64px - 2rem);
+  max-height: calc(100% - 64px);
 }
 
 #add-btn {
