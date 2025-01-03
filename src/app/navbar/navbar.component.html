@@ -107,6 +107,14 @@
             <span>New story</span>
             <mat-icon>add</mat-icon>
         </button>
+        <button mat-button aria-label="Current" [disabled]="currentStoryId === null" [routerLink]="'/story'">
+            <span>Current</span>
+            <mat-icon>history_edu</mat-icon>
+        </button>
+        <button mat-button aria-label="Stories" (click)="GoHome()">
+            <span>Stories</span>
+            <mat-icon>list</mat-icon>
+        </button>
         <button mat-button aria-label="Invites" (click)="GoToInvites()"
             [matBadge]="numberOfNewInvites > 0 ? numberOfNewInvites : null" matBadgeSize="small">
             <span>Invites</span>
